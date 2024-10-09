@@ -39,3 +39,27 @@ Compound Types
     Arrays
     Mutability
     Inference
+
+Structures
+Enums
+    Type aliases
+    c-like enums 
+    cast
+    Testcase: linked-list
+
+Attributes
+    - used for conditional compilation
+
+
+match cases in rust
+    - Some and None
+
+impl and trait
+
+<!-- use keyword (pending------------------------------------------------) -->
+
+
+variables ownership, scop and borrowing 
+    - borrowing a single variable acrose multiple functions with mutable and immutable aproaches.
+
+Box - Smart  pointer
