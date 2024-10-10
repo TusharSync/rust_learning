@@ -63,3 +63,40 @@ variables ownership, scop and borrowing
     - borrowing a single variable acrose multiple functions with mutable and immutable aproaches.
 
 Box - Smart  pointer
+
+
+
+Variable Bindings
+    Mutability
+    Scope and Shadowing
+    Declare first
+    unsafe keyword to run the code which violates safty guidelines
+    inference
+    ownership and borrowing
+    
+
+
+Conversion
+
+    from and into
+    Expressions in rust
+    TryFrom and TryInto --PENDING
+    To and from Strings --PENDING
+
+
+
+Flow of Control
+    - if/else
+    - loop
+    - nested loops inner outer and multiple nesting
+    - while loop
+    - match
+        - Destructuring
+            - destructure_tuple
+            - destructure_enums
+            - structs destructuring
+            - pointers/ref  (ref --- PENDING)
+            - The ref pattern---PENDING
+    - if let
+
+Syntax and Semantics

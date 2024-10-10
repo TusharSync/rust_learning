@@ -881,102 +881,674 @@
 
 // Suppress all warnings from casts which overflow.
 
-use crate::List::*;
+// use crate::List::*;
 
-enum List {
-    // Cons: Tuple struct that wraps an element and a pointer to the next node
-    That(u32, Box<List>),
-    // Nil: A node that signifies the end of the linked list
-    Nil,
+// #[derive(Debug)]
+// enum List {
+//     // Cons: Tuple struct that wraps an element and a pointer to the next node
+//     Fat(u32, Box<List>),
+//     // Nil: A node that signifies the end of the linked list
+//     Nil,
+// }
+
+// // Methods can be attached to an enum
+// impl List {
+//     #![allow(dead_code)]
+//     // Create an empty list
+//     fn new() -> List {
+//         // `Nil` has type `List`
+//         Nil
+//     }
+
+//     // Consume a list, and return the same list with a new element at its front
+//     fn prepend(self, elem: u32) -> List {
+//         // `Cons` also has type List
+//         Fat(elem, Box::new(self))
+//     }
+
+//     fn append(self, elem: u32) -> List {
+//         match self {
+//             // If the list is empty, return a new list with the element
+//             Nil => Fat(elem, Box::new(Nil)),
+//             // If the list is not empty, recursively call append on the tail
+//             Fat(head, tail) => Fat(head, Box::new(tail.append(elem))),
+//         }
+//     }
+
+//     // Return the length of the list
+//     fn len(&self) -> u32 {
+//         // `self` has to be matched, because the behavior of this method
+//         // depends on the variant of `self`
+//         // `self` has type `&List`, and `*self` has type `List`, matching on a
+//         // concrete type `T` is preferred over a match on a reference `&T`
+//         // after Rust 2018 you can use self here and tail (with no ref) below as well,
+//         // rust will infer &s and ref tail.
+//         // See https://doc.rust-lang.org/edition-guide/rust-2018/ownership-and-lifetimes/default-match-bindings.html
+//         match *self {
+//             // Can't take ownership of the tail, because `self` is borrowed;
+//             // instead take a reference to the tail
+//             Fat(_, ref tail) => 1 + tail.len(),
+//             // Base Case: An empty list has zero length
+//             Nil => 0,
+//         }
+//     }
+
+//     // Return representation of the list as a (heap allocated) string
+//     fn stringify(&self) -> String {
+//         match *self {
+//             Fat(head, ref tail) => {
+//                 // `format!` is similar to `print!`, but returns a heap
+//                 // allocated string instead of printing to the console
+//                 format!("{}, {}", head, tail.stringify())
+//             }
+//             Nil => {
+//                 format!("Nil")
+//             }
+//         }
+//     }
+// }
+
+// fn main() {
+//     // Create an empty linked list
+//     let mut list: List = List::new();
+//     // Prepend some elements
+//     list = list.append(1);
+//     list = list.append(2);
+//     print!("888888888888888____________{:?}___________\n", list);
+//     list = list.append(3);
+//     list = list.append(4);
+
+//     // Show the final state of the list
+//     println!(
+//         "-----------------------linked list has length: {}",
+//         list.len()
+//     );
+//     println!("{}", list.stringify());
+// }
+
+// fn main() {
+//     let an_integer: u32 = 1u32;
+//     let a_boolean: bool = true;
+//     let unit: () = ();
+
+//     // copy `an_integer` into `copied_integer`
+//     let mut copied_integer: u32 = an_integer;
+//     copied_integer+=1;
+//     println!("Coppied integer: {:?}", copied_integer);
+//     println!("An integer: {:?}", an_integer);
+
+//     println!("A boolean: {:?}", a_boolean);
+//     println!("Meet the unit value: {:?}", unit);
+
+//     // The compiler warns about unused variable bindings; these warnings can
+//     // be silenced by prefixing the variable name with an underscore
+//     let _unused_variable: u32 = 3u32;
+
+//     let _noisy_unused_variable: u32 = 2u32;
+//     // FIXME ^ Prefix with an underscore to suppress the warning
+//     // Please note that warnings may not be shown in a browser
+// }
+
+// fn main() {
+//     let _immutable_binding: i32 = 1;
+//     let mut mutable_binding: i32 = 1;
+
+//     println!("Before mutation: {}", mutable_binding);
+
+//     // Ok
+//     mutable_binding += 1;
+//     mutable_binding += 1;
+
+//     println!("After mutation: {}", mutable_binding);
+
+//     // Error! Cannot assign a new value to an immutable variable
+//     // _immutable_binding += 1;
+// }
+
+// fn main() {
+//     let x: i32 = 42;
+//     let r: *const i32 = &x;
+//     unsafe {
+//         println!("{:?}", *r); // Dereferencing a raw pointer
+//     }
+// }
+
+// fn main() {
+//     // Suffixed literals, their types are known at initialization
+//     let x: u8 = 1u8;
+//     let y: u32 = 2u32;
+//     let z: f32 = 3f32;
+
+//     // Unsuffixed literals, their types depend on how they are used
+//     let i: i32 = 1;
+//     let f: f64 = 1.0;
+
+//     // `size_of_val` returns the size of a variable in bytes
+//     println!("size of `x` in bytes: {}", std::mem::size_of_val(&x));
+//     println!("size of `y` in bytes: {}", std::mem::size_of_val(&y));
+//     println!("size of `z` in bytes: {}", std::mem::size_of_val(&z));
+//     println!("size of `i` in bytes: {}", std::mem::size_of_val(&i));
+//     println!("size of `f` in bytes: {}", std::mem::size_of_val(&f));
+// }
+// fn first<T>(slice: &[T]) -> &T {
+//     &slice[0] // Return a reference to the first element
+// }
+// `NanoSecond`, `Inch`, and `U64` are new names for `u64`.
+
+// fn main() {
+//     let my_str: &str = "hello";
+//     let my_string: String = String::from(my_str);
+
+// }
+
+// use std::convert::Into;
+
+// #[derive(Debug)]
+// struct Number {
+//     value: i128,
+// }
+
+// impl Into<Number> for i128 {
+//     fn into(self) -> Number {
+//         Number { value: self }
+//     }
+// }
+
+// fn main() {
+//     let int: i128 = 56;
+//     // Try removing the type annotation
+//     let num: Number = int.into();
+//     println!("My number is {:?}", num);
+// }
+
+// use std::convert::From;
+
+// #[derive(Debug)]
+// struct Number {
+//     value: i32,
+// }
+
+// // Define `From`
+// impl From<i32> for Number {
+//     fn from(item: i32) -> Self {
+//         Number { value: item }
+//     }
+// }
+
+// fn main() {
+//     let int: i32 = 5;
+//     // use `Into`
+//     let num: Number = int.into();
+//     println!("My number is {:?}", num);
+// }
+// struct MyStruct {
+//     value: i32,
+// }
+
+// impl From<i32> for MyStruct {
+//     fn from(value: i32) -> Self {
+//         MyStruct { value }
+//     }
+// }
+// fn take_my_struct(my_struct: MyStruct) {
+//     println!("Received MyStruct with value: {}", my_struct.value);
+// }
+
+// fn main() {
+//     let my_struct: MyStruct = MyStruct::from(20);
+//     take_my_struct(my_struct);
+
+//     // Using Into
+//     let value: i32 = 30;
+//     let my_struct_from_value: MyStruct = value.into();
+//     take_my_struct(my_struct_from_value);
+// }
+
+// fn main() {
+//     let n = 5;
+
+//     if n < 0 {
+//         print!("{} is negative", n);
+//     } else if n > 0 {
+//         print!("{} is positive", n);
+//     } else {
+//         print!("{} is zero", n);
+//     }
+
+//     let big_n: i32 =
+//         if n < 10 && n > -10 {
+//             println!(", and is a small number, increase ten-fold");
+
+//             // This expression returns an `i32`.
+//             10 * n
+//         } else {
+//             println!(", and is a big number, halve the number");
+
+//             // This expression must return an `i32` as well.
+//             n / 2
+//             // TODO ^ Try suppressing this expression with a semicolon.
+//         };
+//     //   ^ Don't forget to put a semicolon here! All `let` bindings need it.
+
+//     println!("{} -> {}", n, big_n);
+// }
+
+// fn main() {
+//     let mut count: u32 = 0u32;
+
+//     println!("Let's count until infinity!");
+
+//     // Infinite loop
+//     loop {
+//         count += 1;
+
+//         if count == 3 {
+//             println!("three");
+
+//             // Skip the rest of this iteration
+//             continue;
+//         }
+
+//         println!("{}", count);
+
+//         if count == 5 {
+//             println!("OK, that's enough");
+
+//             // Exit this loop
+//             break;
+//         }
+//     }
+// }
+
+// #![allow(unreachable_code, unused_labels)]
+
+// fn main() {
+//     'x1: loop {
+//         println!("Entered the outer loop");
+
+//         'x2: loop {
+//             println!("Entered the inner loop");
+//             break 'x1;
+//         }
+
+//         println!("This point will never be reached");
+//     }
+
+//     println!("Exited the outer loop");
+// }
+
+// fn main() {
+//     let mut counter = 0;
+
+//     let result = loop {
+//         counter += 1;
+
+//         if counter == 10 {
+//             break counter * 2;
+//         }
+//     };
+//     print!("{}", result);
+//     // assert_eq!(result, 203);
+// }
+
+// fn main() {
+//     // A counter variable
+//     let mut n: i32 = 1;
+
+//     // Loop while `n` is less than 101
+//     while n < 110 {
+//         if n % 15 == 0 {
+//             println!("fizzbuzz");
+//         } else if n % 3 == 0 {
+//             println!("fizz");
+//         } else if n % 5 == 0 {
+//             println!("buzz");
+//         } else {
+//             println!("{}", n);
+//         }
+
+//         // Increment counter
+//         n += 1;
+//     }
+// }
+
+// fn main() {
+//     // `n` will take the values: 1, 2, ..., 100 in each iteration
+//     for n in 1..=101 {
+//         print!("{}\n", n)
+//     }
+// let names: Vec<&str> = vec!["Bob", "Frank", "Ferris"];
+
+// for name in names.iter() {
+//     match name {
+//         &"Ferris" => println!("There is a rustacean among us!"),
+//         // TODO ^ Try deleting the & and matching just "Ferris"
+//         _ => println!("Hello {}", name),
+//     }
+// }
+
+// println!("names: {:?}", names);
+
+// for name in names.into_iter() {
+//     match name {
+//         "Ferris" => println!("There is a rustacean among us!"),
+//         _ => println!("Hello {}", name),
+//     }
+// }
+
+// let mut names: Vec<&str> = vec!["Bob", "Frank", "Ferris"];
+// println!("xxxxxxx: {:?}", names);
+// for name in names.iter_mut() {
+//     *name = match name {
+//         &mut "Ferris" => "There is a rustacean among us!",
+//         _ => "Hello",
+//     }
+// }
+// println!("names: {:?}", names);
+
+// println!("names: {:?}", names);
+// FIXME ^ Comment out this line
+// }
+
+// fn main() {
+//     let number: i32 = 13;
+//     // TODO ^ Try different values for `number`
+
+//     println!("Tell me about {}", number);
+//     match number {
+//         // Match a single value
+//         1 => println!("One!"),
+//         // Match several values
+//         2 | 3 | 5 | 7 | 11 => println!("This is a prime"),
+//         // TODO ^ Try adding 13 to the list of prime values
+//         // Match an inclusive range
+//         13..=19 => println!("A teen"),
+//         // Handle the rest of cases
+//         _ => println!("Ain't special"),
+//         // TODO ^ Try commenting out this catch-all arm
+//     }
+
+//     let boolean: bool = true;
+//     // Match is an expression too
+//     let binary: i32 = match boolean {
+//         // The arms of a match must cover all the possible values
+//         false => 0,
+//         true => 1,
+//         // TODO ^ Try commenting out one of these arms
+//     };
+
+//     println!("{} -> {}", boolean, binary);
+// }
+// #[allow(dead_code)]
+// enum Temperature {
+//     Celsius(i32),
+//     Fahrenheit(i32),
+// }
+
+// fn main() {
+//     let temperature = Temperature::Celsius(35);
+//     // ^ TODO try different values for `temperature`
+
+//     match temperature {
+//         Temperature::Celsius(t) if t > 30 => println!("{}C is above 30 Celsius", t),
+//         // The `if condition` part ^ is a guard
+//         Temperature::Celsius(t) => println!("{}C is equal to or below 30 Celsius", t),
+
+//         Temperature::Fahrenheit(t) if t > 86 => println!("{}F is above 86 Fahrenheit", t),
+//         Temperature::Fahrenheit(t) => println!("{}F is equal to or below 86 Fahrenheit", t),
+//     }
+// }
+
+// fn main() {
+//     let triple = (0, -2, 3);
+//     // TODO ^ Try different values for `triple`
+
+//     println!("Tell me about {:?}", triple);
+//     // Match can be used to destructure a tuple
+//     match triple {
+//         // Destructure the second and third elements
+//         (0, y, z) => println!("First is `0`, `y` is {:?}, and `z` is {:?}", y, z),
+//         (1, ..) => println!("First is `1` and the rest doesn't matter"),
+//         (.., 2) => println!("last is `2` and the rest doesn't matter"),
+//         (3, .., 4) => println!("First is `3`, last is `4`, and the rest doesn't matter"),
+//         // `..` can be used to ignore the rest of the tuple
+//         _ => println!("It doesn't matter what they are"),
+//     }
+// }
+
+// fn main() {
+//     // Try changing the values in the array, or make it a slice!
+//     let array = [1, -2, 6];
+
+//     match array {
+//         // Binds the second and the third elements to the respective variables
+//         [0, second, third] =>
+//             println!("array[0] = 0, array[1] = {}, array[2] = {}", second, third),
+
+//         // Single values can be ignored with _
+//         [1, _, third] => println!(
+//             "array[0] = 1, array[2] = {} and array[1] was ignored",
+//             third
+//         ),
+
+//         // You can also bind some and ignore the rest
+//         [-1, second, ..] => println!(
+//             "array[0] = -1, array[1] = {} and all the other ones were ignored",
+//             second
+//         ),
+//         // The code below would not compile
+//         // [-1, second] => ...
+
+//         // Or store them in another array/slice (the type depends on
+//         // that of the value that is being matched against)
+//         [3, second, tail @ ..] => println!(
+//             "array[0] = 3, array[1] = {} and the other elements were {:?}",
+//             second, tail
+//         ),
+
+//         // Combining these patterns, we can, for example, bind the first and
+//         // last values, and store the rest of them in a single array
+//         [first, middle @ .., last] => println!(
+//             "array[0] = {}, middle = {:?}, array[2] = {}",
+//             first, middle, last
+//         ),
+//     }
+// }
+
+// `allow` required to silence warnings because only
+// one variant is used.
+// #[allow(dead_code)]
+// enum Color {
+//     // These 3 are specified solely by their name.
+//     Red,
+//     Blue,
+//     Green,
+//     // These likewise tie `u32` tuples to different names: color models.
+//     RGB(u32, u32, u32),
+//     HSV(u32, u32, u32),
+//     HSL(u32, u32, u32),
+//     CMY(u32, u32, u32),
+//     CMYK(u32, u32, u32, u32),
+// }
+
+// fn main() {
+//     let colors: Vec<Color> = vec![
+//         Color::Red,
+//         Color::Blue,
+//         Color::Green,
+//         Color::RGB(255, 0, 0),
+//         Color::HSV(0, 100, 100),
+//         Color::HSL(0, 100, 50),
+//         Color::CMY(0, 255, 255),
+//         Color::CMYK(0, 255, 255, 0),
+//     ];
+//     // TODO ^ Try different variants for `color`
+//     println!("What colors are there?");
+//     // Match on each color in the vector
+//     for color in colors {
+//         match color {
+//             Color::Red => println!("The color is Red!"),
+//             Color::Blue => println!("The color is Blue!"),
+//             Color::Green => println!("The color is Green!"),
+//             Color::RGB(r, g, b) => println!("Red: {}, Green: {}, Blue: {}!", r, g, b),
+//             Color::HSV(h, s, v) => println!("Hue: {}, Saturation: {}, Value: {}!", h, s, v),
+//             Color::HSL(h, s, l) => println!("Hue: {}, Saturation: {}, Lightness: {}!", h, s, l),
+//             Color::CMY(c, m, y) => println!("Cyan: {}, Magenta: {}, Yellow: {}!", c, m, y),
+//             Color::CMYK(c, m, y, k) => println!("Cyan: {}, Magenta: {}, Yellow: {}, Key (Black): {}!", c, m, y, k),
+//         }
+//     }
+// }
+
+// fn main() {
+//     let user_input: String = String::from("hello, world!");
+
+//     // Take ownership of the user input to process it
+//     let processed_input: String = process_input(user_input);
+//     println!("Processed input: {}", processed_input);
+// }
+
+// fn process_input(input: String) -> String {
+//     input.to_uppercase() // Takes ownership and transforms it
+// }
+// fn main() {
+//     // Assign a reference of type `i32`. The `&` signifies there
+//     // is a reference being assigned.
+//     let reference: &i32 = &4;
+
+//     match reference {
+//         // If `reference` is pattern matched against `&val`, it results
+//         // in a comparison like:
+//         // `&i32`
+//         // `&val`
+//         // ^ We see that if the matching `&`s are dropped, then the `i32`
+//         // should be assigned to `val`.
+//         &val => println!("Got a value via destructuring: {:?}", val),
+//     }
+
+//     // To avoid the `&`, you dereference before matching.
+//     match *reference {
+//         val => println!("Got a value via dereferencing: {:?}", val),
+//     }
+
+//     // What if you don't start with a reference? `reference` was a `&`
+//     // because the right side was already a reference. This is not
+//     // a reference because the right side is not one.
+//     let _not_a_reference: i32 = 3;
+
+//     // Rust provides `ref` for exactly this purpose. It modifies the
+//     // assignment so that a reference is created for the element; this
+//     // reference is assigned.
+//     let ref _is_a_reference = 3;
+
+//     // Accordingly, by defining 2 values without references, references
+//     // can be retrieved via `ref` and `ref mut`.
+//     let value: i32 = 5;
+//     let mut mut_value: i32 = 6;
+
+//     // Use `ref` keyword to create a reference.
+//     match value {
+//         ref r => println!("Got a reference to a value: {:?}", r),
+//     }
+
+//     // Use `ref mut` similarly.
+//     match mut_value {
+//         ref mut m => {
+//             // Got a reference. Gotta dereference it before we can
+//             // add anything to it.
+//             *m += 10;
+//             println!("We added 10. `mut_value`: {:?}", m);
+//         },
+//     }
+// }
+
+// fn main() {
+//     struct Foo {
+//         x: (u32, u32),
+//         y: u32,
+//     }
+
+//     // Try changing the values in the struct to see what happens
+//     let foo: Foo = Foo { x: (1, 2), y: 3 };
+
+//     match foo {
+//         Foo { x: (1, b), y } => println!("First of x is 1, b = {},  y = {} ", b, y),
+
+//         // you can destructure structs and rename the variables,
+//         // the order is not important
+//         Foo { y: 2, x: i } => println!("y is 2, i = {:?}", i),
+
+//         // and you can also ignore some variables:
+//         Foo { y, .. } => println!("y = {y}, we don't care about x"),
+//         // this will give an error: pattern does not mention field `x`
+//         //Foo { y } => println!("y = {}", y),
+//     }
+
+//     let faa: Foo = Foo { x: (1, 2), y: 3 };
+
+//     // You do not need a match block to destructure structs:
+//     let Foo { x: x0, y: y0 } = faa;
+//     println!("Outside: x0 = {x0:?}, y0 = {y0}");
+
+//     // Destructuring works with nested structs as well:
+//     struct Bar {
+//         foo: Foo,
+//     }
+
+//     let bar: Bar = Bar { foo: faa };
+//     let Bar {
+//         foo: Foo {
+//             x: nested_x,
+//             y: nested_y,
+//         },
+//     } = bar;
+//     println!("Nested: nested_x = {nested_x:?}, nested_y = {nested_y:?}");
+// }
+
+
+// struct Person {
+//     name: String,
+//     age: u32,
+// }
+
+// impl Person {
+//     // Method to return fields as a vector of tuples
+//     fn data(self) -> Vec<(String, String)> {
+//         vec![
+//             ("name".to_string(), self.name),
+//             ("age".to_string(), self.age.to_string()), // Convert age to String
+//         ]
+//     }
+// }
+
+// fn main() {
+//     let person: Person = Person {
+//         name: String::from("Alice"),
+//         age: 30,
+//     };
+//     // Print key-value pairs using a for loop
+//     for (key, value) in person.data() {
+//         println!("{}: {}", key, value);
+//     }
+// }
+
+struct User {
+    username: String,
+    email: String,
 }
 
-// Methods can be attached to an enum
-impl List {
-    // Create an empty list
-    fn new() -> List {
-        // `Nil` has type `List`
-        Nil
-    }
-
-    // Consume a list, and return the same list with a new element at its front
-    fn prepend(self, elem: u32) -> List {
-        // `Cons` also has type List
-        That(elem, Box::new(self))
-    }
-
-    // Return the length of the list
-    fn len(&self) -> u32 {
-        // `self` has to be matched, because the behavior of this method
-        // depends on the variant of `self`
-        // `self` has type `&List`, and `*self` has type `List`, matching on a
-        // concrete type `T` is preferred over a match on a reference `&T`
-        // after Rust 2018 you can use self here and tail (with no ref) below as well,
-        // rust will infer &s and ref tail.
-        // See https://doc.rust-lang.org/edition-guide/rust-2018/ownership-and-lifetimes/default-match-bindings.html
-        match *self {
-            // Can't take ownership of the tail, because `self` is borrowed;
-            // instead take a reference to the tail
-            That(_, ref tail) => 1 + tail.len(),
-            // Base Case: An empty list has zero length
-            Nil => 0,
-        }
-    }
-
-    // Return representation of the list as a (heap allocated) string
-    fn stringify(&self) -> String {
-        match *self {
-            That(head, ref tail) => {
-                // `format!` is similar to `print!`, but returns a heap
-                // allocated string instead of printing to the console
-                format!("{}, {}", head, tail.stringify())
-            }
-            Nil => {
-                format!("Nil")
-            }
-        }
-    }
+enum Login {
+    Success(User),
+    Failure(String),
 }
 
-fn increment_box(b: &mut Box<i32>) {
-    **b += 1; // Increment the value inside the Box
-}
-
-fn double_box(b: &mut Box<i32>) {
-    **b *= 2; // Double the value inside the Box
-}
-
-fn fouble_box(b: &mut Box<i32>) {
-    **b *= 4; // Fouble the value inside the Box
-}
 fn main() {
-    // Create an empty linked list
-    let mut list: List = List::new();
+    let login: Login = Login::Success(User {
+        username: String::from("user123"),
+        email: String::from("user@example.com"),
+    });
 
-    // Prepend some elements
-    list = list.prepend(1);
-    list = list.prepend(2);
-    list = list.prepend(3);
-
-    // Show the final state of the list
-    println!("linked list has length: {}", list.len());
-    println!("{}", list.stringify());
-
-    let mut b: Box<i32> = Box::new(10); // Create a mutable Box
-    println!("XXXXX: {:?}", b); // Prints 22
-
-    println!("Original value: {}", b); // Prints 10
-
-    // First mutable borrow
-    increment_box(&mut b);
-    println!("After increment: {}", b); // Prints 11
-
-    // Second mutable borrow
-    double_box(&mut b);
-    println!("After doubling: {}", b); // Prints 22
-
-    fouble_box(&mut b);
-    println!("After foubling: {}", b); // Prints 22
-    println!("SSSS: {}", *b); // Prints 22
-
-
+    if let Login::Success(User { username, email }) = login {
+        println!("Logged in as: {}, Email: {}", username, email);
+        // Output: Logged in as: user123, Email: user@example.com
+    }
 }
