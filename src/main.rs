@@ -1504,7 +1504,6 @@
 //     println!("Nested: nested_x = {nested_x:?}, nested_y = {nested_y:?}");
 // }
 
-
 // struct Person {
 //     name: String,
 //     age: u32,
@@ -1531,24 +1530,354 @@
 //     }
 // }
 
-struct User {
-    username: String,
-    email: String,
-}
+// struct User {
+//     username: String,
+//     email: String,
+// }
 
-enum Login {
-    Success(User),
-    Failure(String),
-}
+// enum Login {
+//     Success(User),
+//     Failure(String),
+// }
+
+// fn main() {
+//     let login: Login = Login::Success(User {
+//         username: String::from("user123"),
+//         email: String::from("user@example.com"),
+//     });
+
+//     if let Login::Success(User { username, email }) = login {
+//         println!("Logged in as: {}, Email: {}", username, email);
+//         // Output: Logged in as: user123, Email: user@example.com
+//     }
+// }
+
+// fn main() {
+//     let x: i32 = 10; // x is the owner, stored on the stack
+//     let y: &i32 = &x; // y borrows x immutably
+//     let z: &&i32 = &y; // z borrows y immutably
+
+//     // Print values
+//     println!("Value of x: {}", x);
+//     println!("Value of y (borrowed): {}", y);
+//     println!("Value of z (double borrowed): {}", z);
+
+//     // Print memory addresses
+//     println!("Memory address of x: {:p}", &x);
+//     println!("Memory address of y (borrowed): {:p}", y);
+//     println!("Memory address of z (double borrowed): {:p}", &z);
+// }
+
+// fn main() {
+//     let mut x: i32 = 10; // x is mutable
+
+//     // Create a mutable reference to x
+//     let y: &mut i32 = &mut x; // y borrows x mutably
+
+//     // Mutate x through y
+//     *y = 20; // Now x is 20
+
+//     let z: &i32 = &y; // z borrows the value of y immutably
+//     // Create an immutable reference to y
+
+//     // Accessing through z
+//     println!("Value of y (borrowed): {}", y); // This will also print 20
+//     println!("Value of z (double borrowed): {}", *z); // This will also print 20
+// }
+
+// fn main() {
+//     let mut x: i32 = 5;
+
+//     // Immutable borrow
+//     let y1: &i32 = &x; // First immutable borrow
+//     let y2: &i32 = &x; // Second immutable borrow
+//     let y3: &i32 = &x; // Second immutable borrow
+
+//     println!("y1: {}, y2: {}, y3: {}", y1, y2, y3); // Both immutable borrows can be used
+
+//     // Mutable borrow
+//     let z: &mut i32 = &mut x; // Mutable borrow
+//     *z += 1; // Modify x through the mutable reference
+
+//     *z += 1; // Modify x through the mutable reference
+
+//     x += 1;
+//     x += 1;
+//     x += 1;
+//     x += 1;
+//     x += 1;
+//     x += 1;
+//     // println!("y1: {}, y2: {}", y1, y2); // This would cause a compile error!
+//     // Cannot use y1 or y2 here because of the mutable borrow
+//     println!("x after mutation: {}", x); // Safe to use x now
+// }
+
+// struct Person {
+//     name: String,
+//     age: u32,
+// }
+
+// impl Person {
+
+//     fn birthday(&mut self) {
+//         self.age += 1;
+//     }
+
+//     fn display(&self) {
+//         println!("Name: {}, Age: {}", self.name, self.age);
+//     }
+// }
+
+// fn main() {
+//     // let mut person: Person = Person::new("Alice", 30);
+//     let mut person: Person = Person {
+//         name: String::from("Alice"),
+//         age: 30,
+//     };
+
+//     // Immutable borrows
+//     let person_ref1: &Person = &person; // First immutable borrow
+//     let person_ref2: &Person = &person; // Second immutable borrow
+
+//     person_ref1.display(); // Using the first immutable reference
+//     person_ref2.display(); // Using the second immutable reference
+
+//     // Now we want to modify the person, so we need to create a mutable borrow
+//     // But first, we need to ensure that we no longer have immutable borrows
+//     // We can do this by ending the scope of the immutable borrows
+
+//     {
+//         let person_ref3: &mut Person = &mut person; // Mutable borrow
+//         person_ref3.birthday(); // Modify the person's age
+//     } // person_ref3 goes out of scope here
+
+//     // Now we can safely use the original person again
+//     person.display(); // Should show age 31
+// }
+
+// #[derive(Debug)]
+// struct Person {
+//     name: String,
+//     age: Option<u32>, // Using Option to allow for an optional age
+// }
+
+// impl Person {
+//     // Constructor that accepts name and an optional age
+//     fn new(name: String, age: Option<u32>) -> Self {
+//         Self {
+//             name,
+//             age: age.or(Some(18)), // Default to Some(18) if age is None
+//         }
+//     }
+//     // Display method to format the output
+//     fn display(&self) -> String {
+//         let age_display: String = match self.age {
+//             Some(age) => age.to_string(),
+//             None => "Unknown".to_string(),
+//         };
+//         format!("Name: {}, Age: {}", self.name, age_display)
+//     }
+// }
+
+// fn main() {
+//     // Create an instance with a specific age
+//     let person_with_age: Person = Person::new(String::from("Alice"), Some(30));
+//     println!("Person with age: {:?}", person_with_age.display());
+
+//     // Create an instance with the default age of 18
+//     let person_with_default_age: Person = Person::new(String::from("Bob"), None);
+//     println!(
+//         "Person with default age: {:#?}",
+//         person_with_default_age.display()
+//     );
+//     let s: String = String::from("helsssssssssssssssssssssssssssssssssssssssssslo"); // s is valid from this point forward
+//     print!("{}", s);
+//     print!("{}", s);
+//     print!("{}", s);
+//     print!("{}", s);
+//     print!("{}", s);
+
+//     // do stuff with s
+// }
+
+// use std::fmt;
+
+// #[derive(Debug)]
+// struct MyString {
+//     chars: Vec<char>,
+// }
+
+// impl MyString {
+//     // Constructor to create a new MyString from a &str
+//     fn new<S: Into<String>>(input: S) -> Self {
+//         let chars: Vec<char> = input.into().chars().collect();
+//         MyString { chars }
+//     }
+
+//     // Method to append another MyString
+//     fn push(&mut self, other: &MyString) {
+//         self.chars.extend(&other.chars);
+//     }
+
+//     // Method to get the length of the string
+//     fn len(&self) -> usize {
+//         self.chars.len()
+//     }
+// }
+
+// // Implementing the Display trait for MyString
+// impl fmt::Display for MyString {
+//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+//         write!(f, "--->{}<---", self.chars.iter().collect::<String>())
+//     }
+// }
+
+// fn main() {
+//     // Create a new MyString
+//     let mut my_string: MyString = MyString::new("Hello");
+//     println!("{:?}", my_string); // MyString { chars: ['H', 'e', 'l', 'l', 'o'] }
+
+//     // Append another MyString
+//     let other_string: MyString = MyString::new(", world!");
+//     my_string.push(&other_string);
+//     println!("{:?}", my_string); // MyString { chars: ['H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!'] }
+
+//     // Get the length
+//     println!("Length: {}", my_string.len()); // Length: 13
+//     println!("Converted to String: {:?}", my_string); // Converted to String: Hello, world!
+// }
+
+// fn main() {
+//     let vec1: Vec<i32> = vec![1, 2, 3];
+//     let vec2: Vec<i32> = vec1.clone(); // Explicit deep copy
+
+//     println!("{:?}", vec1); // vec1 is still accessible
+//     println!("{:?}", vec2); // vec2 is an independent copy
+//     let vec_ref: &Vec<i32> = &vec1; // Borrowing vec1
+
+//     println!("{:?} {:?}", vec1, vec_ref); // Access through reference
+// }
+
+// fn main() {
+//     let mut arr: [i32; 5] = [1, 2, 3, 4, 5];
+//     let slice: &[i32] = &arr[1..4]; // Immutable borrow of a slice
+
+//     // arr[0] = 10;  // This would cause an error because arr is immutably borrowed
+//     println!("{:?}", slice);  // Can still access the slice
+
+//     arr[1] = 10;
+//     // However, you can mutate the array after the slice is out of scope or if there are no references:
+//     println!("{:?}", arr);  // Output: [10, 2, 3, 4, 5]
+// }
+
+// fn main() {
+//     let mut s: String = String::from("Hello, world");
+//     s.push('j');
+
+//     // Immutable slice
+//     let slice1: &str = &s[0..5];  // Borrowed as immutable
+//     let slice2: &str = &s[7..];   // Another immutable borrow
+//     // s.push_str("!");  // Error: cannot mutate while immutably borrowed
+
+//     println!("Slice1: {}, Slice2: {}", slice1, slice2);  // OK: multiple immutable references
+
+//     // Mutable slice (no immutable slices allowed simultaneously)
+//     let mut_slice: &mut str = &mut s[0..5];  // Mutable borrow is now possible after the immutable ones are done
+//     println!("{}", mut_slice);  // OK: works after immutables are dropped
+// }
+
+// fn main() {
+//     let mut s: String = String::from("Hello, world");
+
+//     // Create an immutable slice
+//     let slice1: &str = &s[0..5]; // "Hello"
+//     let slice2: &str = &s[7..];  // "world"
+
+//     println!("Slice1: {}, Slice2: {}", slice1, slice2);
+
+//     // Attempt to create a mutable slice and modify the content
+//     let mut_slice: &mut str = &mut s[0..5]; // "Hello"
+//     unsafe {
+//         mut_slice.as_bytes_mut()[0] = b'J';  // Change 'H' to 'J'
+//     }
+//     // You can modify individual characters of the mutable slice
+
+//     // Now the original string has been modified
+//     println!("Modified string: {}", mut_slice);  // Output: "Jello, world"
+// }
+
+// fn main() {
+//     let mut arr: [i32; 5] = [1, 2, 3, 4, 5]; // A mutable array
+//     let copy_array: [i32; 5] = arr.clone();
+//     print!("copied array{:?}", copy_array);
+//     // Create a mutable slice that borrows part of the array
+//     let slice: &mut [i32] = &mut arr[1..5]; // Mutable borrow of [2, 3, 4]
+//     println!("before Slice: {:?}", slice); // Output: [2, 3, 4]
+
+//     // Mutate the elements in the slice
+//     slice[0] = 20; // Change the first element of the slice (affects arr[1])
+//     slice[2] = 40; // Change the last element of the slice (affects arr[3])
+
+//     // Printing both the slice and the original array to show the mutation
+//     println!("Slice: {:?}", slice); // Output: [20, 3, 40]
+//     println!("Array: {:?}", arr); // Output: [1, 20, 3, 40, 5]
+//     print!("copied after array{:?}", copy_array);
+
+// }
+
+// mod libs {
+//     pub mod my_slice; // Declare that the my_slice module is public
+// }
+
+// use libs::my_slice::MySlice;
+
+// fn main() {
+//     let arr: [i32; 5] = [1, 2, 3, 4, 5];
+//     let vec: Vec<i32> = vec![10, 20, 30, 40, 50];
+//     arr.own();
+//     // Use custom `.slice()` method on array
+//     let arr_slice: &[i32] = arr.slice(1, 4);
+//     println!("Array Slice: {:?}", arr_slice); // Output: [2, 3, 4]
+
+//     // Use custom `.slice()` method on vector
+//     let vec_slice: &[i32] = vec.slice(1, 4);
+//     vec.own();
+
+//     println!("Vector Slice: {:?}", vec_slice); // Output: [20, 30, 40]
+// }
+
+// fn main() {
+//     let m1: String = String::from("Hello");
+//     let m2: String = String::from("world");
+//     let (m1_again, m2_again) = greet(m1, m2);
+//     let s: String = format!("{} {}", m1_again, m2_again);
+//     print!("{}",s)
+// }
+
+// fn greet(g1: String, g2: String) -> (String, String) {
+//     println!("{} {}!", g1, g2);
+//     (g1, g2)
+// }
 
 fn main() {
-    let login: Login = Login::Success(User {
-        username: String::from("user123"),
-        email: String::from("user@example.com"),
-    });
+    let m1: String = String::from("Hello");
+    let m2: String = String::from("world");
+    greet(&m1, &m2); // note the ampersands
+                     // let s: String = format!("{} {}", m1, m2);
 
-    if let Login::Success(User { username, email }) = login {
-        println!("Logged in as: {}, Email: {}", username, email);
-        // Output: Logged in as: user123, Email: user@example.com
-    }
+    let mut x: Box<i32> = Box::new(1);
+    let a: i32 = *x; // *x reads the heap value, so a = 1
+    *x += 1; // *x on the left-side modifies the heap value,
+             //     so x points to the value 2
+
+    let r1: &Box<i32> = &x; // r1 points to x on the stack
+    let b: i32 = **r1; // two dereferences get us to the heap value
+
+    let r2: &i32 = &*x; // r2 points to the heap value directly
+    let c: i32 = *r2; // so only one dereference is needed to read it
+}
+
+fn greet(g1: &String, g2: &String) {
+    // note the ampersands
+    println!("{} {}!", g1, g2);
 }
