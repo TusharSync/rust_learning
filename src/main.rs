@@ -1859,25 +1859,568 @@
 //     (g1, g2)
 // }
 
-fn main() {
-    let m1: String = String::from("Hello");
-    let m2: String = String::from("world");
-    greet(&m1, &m2); // note the ampersands
-                     // let s: String = format!("{} {}", m1, m2);
+// fn main() {
+//     let m1: String = String::from("Hello");
+//     let m2: String = String::from("world");
+//     greet(&m1, &m2); // note the ampersands
+//                      // let s: String = format!("{} {}", m1, m2);
 
-    let mut x: Box<i32> = Box::new(1);
-    let a: i32 = *x; // *x reads the heap value, so a = 1
-    *x += 1; // *x on the left-side modifies the heap value,
-             //     so x points to the value 2
+//     let mut x: Box<i32> = Box::new(1);
+//     let a: i32 = *x; // *x reads the heap value, so a = 1
+//     *x += 1; // *x on the left-side modifies the heap value,
+//              //     so x points to the value 2
 
-    let r1: &Box<i32> = &x; // r1 points to x on the stack
-    let b: i32 = **r1; // two dereferences get us to the heap value
+//     let r1: &Box<i32> = &x; // r1 points to x on the stack
+//     let b: i32 = **r1; // two dereferences get us to the heap value
 
-    let r2: &i32 = &*x; // r2 points to the heap value directly
-    let c: i32 = *r2; // so only one dereference is needed to read it
+//     let r2: &i32 = &*x; // r2 points to the heap value directly
+//     let c: i32 = *r2; // so only one dereference is needed to read it
+// }
+
+// fn greet(g1: &String, g2: &String) {
+//     // note the ampersands
+//     println!("{} {}!", g1, g2);
+// }
+// use std::collections::HashMap;
+
+// #[derive(Debug)]
+// struct DynamicStruct {
+//     fields: HashMap<String, Value>,
+// }
+
+// #[derive(Debug)]
+// enum Value {
+//     Int(i32),
+//     Str(String),
+// }
+
+// impl DynamicStruct {
+//     // Constructor to create a new instance
+//     fn new() -> Self {
+//         DynamicStruct {
+//             fields: HashMap::new(),
+//         }
+//     }
+
+//     // Method to set a field dynamically
+//     fn set_field(&mut self, key: String, value: Value) {
+//         self.fields.insert(key, value);
+//     }
+// }
+
+// fn main() {
+//     // Create an instance of DynamicStruct
+//     let mut dynamic_object = DynamicStruct::new();
+
+//     // Dynamically add fields
+//     dynamic_object.set_field("age".to_string(), Value::Int(23));
+//     dynamic_object.set_field("name".to_string(), Value::Str("Alice".to_string()));
+
+//     println!("{:?}", dynamic_object);
+// }
+
+// enum PaymentMethod {
+//     CreditCard { number: String, expiry: String },
+//     PayPal { email: String },
+//     BankTransfer { account_number: String },
+// }
+
+// impl PaymentMethod {
+//     fn process_payment(self, x: String) {
+//         match self {
+//             PaymentMethod::CreditCard { number, expiry } => {
+//                 println!("Processing credit card payment: {} (expires {} {})", number, expiry, x);
+//             }
+//             PaymentMethod::PayPal { email } => {
+//                 println!("Processing PayPal payment for {} {}", email, x);
+//             }
+//             PaymentMethod::BankTransfer { account_number } => {
+//                 println!("Processing bank transfer to account {} {}", account_number, x);
+//             }
+//         }
+//     }
+// }
+
+// fn main() {
+//     let payment: PaymentMethod = PaymentMethod::PayPal { email: String::from("user@example.com") };
+
+//     payment.process_payment(String::from("--Done"));
+// }
+
+// struct Point {
+//     x: f64,
+//     y: f64,
+// }
+
+// // Implementation block, all `Point` associated functions & methods go in here
+// impl Point {
+//     // This is an "associated function" because this function is associated with
+//     // a particular type, that is, Point.
+//     //
+//     // Associated functions don't need to be called with an instance.
+//     // These functions are generally used like constructors.
+//     fn origin() -> Point {
+//         Point { x: 0.0, y: 0.0 }
+//     }
+
+//     // Another associated function, taking two arguments:
+//     fn new(x: f64, y: f64) -> Point {
+//         Point { x: x, y: y }
+//     }
+// }
+
+// struct Rectangle {
+//     p1: Point,
+//     p2: Point,
+// }
+
+// impl Rectangle {
+//     // This is a method
+//     // `&self` is sugar for `self: &Self`, where `Self` is the type of the
+//     // caller object. In this case `Self` = `Rectangle`
+//     fn area(&self) -> f64 {
+//         // `self` gives access to the struct fields via the dot operator
+//         let Point { x: x1, y: y1 } = self.p1;
+//         let Point { x: x2, y: y2 } = self.p2;
+
+//         // `abs` is a `f64` method that returns the absolute value of the
+//         // caller
+//         ((x1 - x2) * (y1 - y2)).abs()
+//     }
+
+//     fn perimeter(&self) -> f64 {
+//         let Point { x: x1, y: y1 } = self.p1;
+//         let Point { x: x2, y: y2 } = self.p2;
+
+//         2.0 * ((x1 - x2).abs() + (y1 - y2).abs())
+//     }
+
+//     // This method requires the caller object to be mutable
+//     // `&mut self` desugars to `self: &mut Self`
+//     fn translate(&mut self, x: f64, y: f64) {
+//         self.p1.x += x;
+//         self.p2.x += x;
+
+//         self.p1.y += y;
+//         self.p2.y += y;
+//     }
+// }
+
+// // `Pair` owns resources: two heap allocated integers
+// struct Pair(Box<i32>, Box<i32>);
+
+// impl Pair {
+//     // This method "consumes" the resources of the caller object
+//     // `self` desugars to `self: Self`
+//     fn destroy(self) {
+//         // Destructure `self`
+//         let Pair(first, second) = self;
+
+//         println!("Destroying Pair({}, {})", first, second);
+
+//         // `first` and `second` go out of scope and get freed
+//     }
+// }
+
+// fn main() {
+//     let rectangle: Rectangle = Rectangle {
+//         // Associated functions are called using double colons
+//         p1: Point::origin(),
+//         p2: Point::new(3.0, 4.0),
+//     };
+
+//     // Methods are called using the dot operator
+//     // Note that the first argument `&self` is implicitly passed, i.e.
+//     // `rectangle.perimeter()` === `Rectangle::perimeter(&rectangle)`
+//     println!("Rectangle perimeter: {}", rectangle.perimeter());
+//     println!("Rectangle area: {}", rectangle.area());
+
+//     let mut square: Rectangle = Rectangle {
+//         p1: Point::origin(),
+//         p2: Point::new(1.0, 1.0),
+//     };
+
+//     // Error! `rectangle` is immutable, but this method requires a mutable
+//     // object
+//     //rectangle.translate(1.0, 0.0);
+//     // TODO ^ Try uncommenting this line
+
+//     // Okay! Mutable objects can call mutable methods
+//     square.translate(1.0, 1.0);
+
+//     let pair = Pair(Box::new(1), Box::new(2));
+
+//     pair.destroy();
+
+//     // Error! Previous `destroy` call "consumed" `pair`
+//     //pair.destroy();
+//     // TODO ^ Try uncommenting this line
+// }
+
+// fn main() {
+//     let outer_var: i32 = 42;
+
+//     // A regular function can't refer to variables in the enclosing environment
+//     //fn function(i: i32) -> i32 { i + outer_var }
+//     // TODO: uncomment the line above and see the compiler error. The compiler
+//     // suggests that we define a closure instead.
+
+//     // Closures are anonymous, here we are binding them to references.
+//     // Annotation is identical to function annotation but is optional
+//     // as are the `{}` wrapping the body. These nameless functions
+//     // are assigned to appropriately named variables.
+//     let closure_annotated = |i: i32| -> i32 { i + outer_var };
+//     let closure_inferred  = |i     |          i + outer_var  ;
+
+//     // Call the closures.
+//     println!("closure_annotated: {}", closure_annotated(1));
+//     println!("closure_inferred: {}", closure_inferred(1));
+//     // Once closure's type has been inferred, it cannot be inferred again with another type.
+//     //println!("cannot reuse closure_inferred with another type: {}", closure_inferred(42i64));
+//     // TODO: uncomment the line above and see the compiler error.
+
+//     // A closure taking no arguments which returns an `i32`.
+//     // The return type is inferred.
+//     let one = || 1;
+//     println!("closure returning one: {}", one());
+
+// }
+
+// fn main() {
+//     let mut names: Vec<&str> = vec!["Charlie", "Alice", "Bobz"];
+
+//     // Sort names by the last character
+//     names.sort_by(|a, b| a.chars().last().cmp(&b.chars().last()));
+//     println!("Sorted by last character: {:?}", names); // Output: ["Alice", "Charlie", "Bob"]
+// }
+
+// fn create_multiplier(factor: i32) -> Box<dyn Fn(i32) -> i32> {
+//     Box::new(move |x| x * factor)
+// }
+
+// fn main() {
+//     let double: Box<dyn Fn(i32) -> i32> = create_multiplier(2);
+//     let triple: Box<dyn Fn(i32) -> i32> = create_multiplier(3);
+
+//     println!("Double 5: {}", double(5)); // Output: 10
+//     println!("Triple 5: {}", triple(5)); // Output: 15
+// }
+
+// fn main() {
+//     use std::mem;
+
+//     let color: String = String::from("green");
+
+//     // A closure to print `color` which immediately borrows (`&`) `color` and
+//     // stores the borrow and closure in the `print` variable. It will remain
+//     // borrowed until `print` is used the last time.
+//     //
+//     // `println!` only requires arguments by immutable reference so it doesn't
+//     // impose anything more restrictive.
+//     let print = || println!("`color`: {}", color);
+
+//     // Call the closure using the borrow.
+//     print();
+
+//     // `color` can be borrowed immutably again, because the closure only holds
+//     // an immutable reference to `color`.
+//     let _reborrow: &String = &color;
+//     print();
+
+//     // A move or reborrow is allowed after the final use of `print`
+//     let _color_moved = color;
+
+//     let mut count = 0;
+//     // A closure to increment `count` could take either `&mut count` or `count`
+//     // but `&mut count` is less restrictive so it takes that. Immediately
+//     // borrows `count`.
+//     //
+//     // A `mut` is required on `inc` because a `&mut` is stored inside. Thus,
+//     // calling the closure mutates `count` which requires a `mut`.
+//     let mut inc = || {
+//         count += 1;
+//         println!("`count`: {}", count);
+//     };
+
+//     // Call the closure using a mutable borrow.
+//     inc();
+
+//     // The closure still mutably borrows `count` because it is called later.
+//     // An attempt to reborrow will lead to an error.
+//     // let _reborrow = &count;
+//     // ^ TODO: try uncommenting this line.
+//     inc();
+
+//     // The closure no longer needs to borrow `&mut count`. Therefore, it is
+//     // possible to reborrow without an error
+//     let _count_reborrowed: &mut i32 = &mut count;
+
+//     // A non-copy type.
+//     let movable: Box<i32> = Box::new(3);
+
+//     // `mem::drop` requires `T` so this must take by value. A copy type
+//     // would copy into the closure leaving the original untouched.
+//     // A non-copy must move and so `movable` immediately moves into
+//     // the closure.
+//     let consume = || {
+//         println!("`movable`: {:?}", movable);
+//         mem::drop(movable);
+//     };
+
+//     // `consume` consumes the variable so this can only be called once.
+//     consume();
+//     // consume();
+//     // ^ TODO: Try uncommenting this line.
+// }
+
+// A function which takes a closure as an argument and calls it.
+// <F> denotes that F is a "Generic type parameter"
+// fn apply<F>(f: F) where
+//     // The closure takes no input and returns nothing.
+//     F: FnOnce() {
+//     // ^ TODO: Try changing this to `Fn` or `FnMut`.
+
+//     f();
+// }
+
+// // A function which takes a closure and returns an `i32`.
+// fn apply_to_3<F>(f: F) -> i32 where
+//     // The closure takes an `i32` and returns an `i32`.
+//     F: Fn(i32) -> i32 {
+
+//     f(3)
+// }
+
+// fn main() {
+//     use std::mem;
+
+//     let greeting: &str = "hello";
+//     // A non-copy type.
+//     // `to_owned` creates owned data from borrowed one
+//     let mut farewell: String = "goodbye".to_owned();
+
+//     // Capture 2 variables: `greeting` by reference and
+//     // `farewell` by value.
+//     let diary = || {
+//         // `greeting` is by reference: requires `Fn`.
+//         println!("I said {}.", greeting);
+
+//         // Mutation forces `farewell` to be captured by
+//         // mutable reference. Now requires `FnMut`.
+//         farewell.push_str("!!!");
+//         println!("Then I screamed {}.", farewell);
+//         println!("Now I can sleep. zzzzz");
+
+//         // Manually calling drop forces `farewell` to
+//         // be captured by value. Now requires `FnOnce`.
+//         mem::drop(farewell);
+//     };
+
+//     // Call the function which applies the closure.
+//     apply(diary);
+
+//     // `double` satisfies `apply_to_3`'s trait bound
+//     let double = |x| 2 * x;
+
+//     println!("3 doubled: {}", apply_to_3(double));
+//     println!("3 doubled: {}", apply_to_3(double));
+
+// }
+
+// fn main() {
+//     panic!("crash and burn");
+// }
+
+// fn main() {
+//     struct OneTimeExecutor<F: FnOnce()> {
+//         func: Option<F>, // Option to allow taking ownership
+//     }
+
+//     impl<F: FnOnce()> OneTimeExecutor<F> {
+//         fn new(func: F) -> Self {
+//             OneTimeExecutor { func: Some(func) }
+//         }
+
+//         fn execute(self) {
+//             if let Some(f) = self.func {
+//                 f(); // Call the closure
+//             }
+//         }
+//     }
+
+//     let executor = OneTimeExecutor::new(|| {
+//         println!("This can only be executed once!");
+//     });
+
+//     executor.execute(); // Executes the closure
+//     // executor.execute(); // Uncommenting this line will cause a compile-time error
+// }
+
+// struct OneTimePrinter<F: FnOnce()> {
+//     message: F,
+// }
+
+// impl<F: FnOnce()> OneTimePrinter<F> {
+//     fn new(message: F) -> Self {
+//         OneTimePrinter { message }
+//     }
+
+//     fn print(self) {
+//         (self.message)(); // Call the closure
+//     }
+// }
+
+// fn main() {
+//     let printer = OneTimePrinter::new(|| {
+//         println!("This message will print only once!");
+//     });
+
+//     printer.print(); // This will print the message
+//     // printer.print(); // Uncommenting this line will cause a compile-time error
+// }
+
+// use std::fs::File;
+// use std::io::ErrorKind;
+
+// fn main() {
+//     let greeting_file_result: Result<File, std::io::Error> = File::open("hello.txt");
+
+//     let greeting_file: File = match greeting_file_result {
+//         Ok(file) => file,
+//         Err(error) => match error.kind() {
+//             ErrorKind::NotFound => match File::create("hello.txt") {
+//                 Ok(fc) => fc,
+//                 Err(e) => panic!("Problem creating the file: {e:?}"),
+//             },
+//             other_error => {
+//                 panic!("Problem opening the file: {other_error:?}");
+//             }
+//         },
+//     };
+
+//     print!("{:?}", greeting_file)
+// }
+
+/// The original ErrorKind enum.
+// pub enum ErrorKind {
+//     /// An entity was not found, often a file.
+//     NotFound,
+//     /// Some other error variant.
+//     InvalidInput,
+// }
+
+// use std::io;
+
+// /// A trait to describe error behavior.
+// pub trait Error {
+//     fn description(&self) -> &'static str;
+// }
+
+// /// A custom enum to wrap std::io::ErrorKind.
+// #[derive(Debug)]
+// pub enum MyErrorKind {
+//     IoError(io::ErrorKind),
+//     NewError,
+// }
+
+// /// Implementing the Error trait for MyErrorKind.
+// impl Error for MyErrorKind {
+//     fn description(&self) -> &'static str {
+//         match self {
+//             MyErrorKind::IoError(kind) => match kind {
+//                 io::ErrorKind::NotFound => "An entity was not found.",
+//                 io::ErrorKind::InvalidInput => "The input provided is invalid.",
+//                 _ => "An unknown IO error occurred.",
+//             },
+//             MyErrorKind::NewError => "A new error occurred.",
+//         }
+//     }
+// }
+
+// /// A combined enum that can represent any kind of error.
+// pub enum CombinedError {
+//     Kind(MyErrorKind),
+// }
+
+// /// Implementing the Error trait for CombinedError.
+// impl Error for CombinedError {
+//     fn description(&self) -> &'static str {
+//         match self {
+//             CombinedError::Kind(kind) => kind.description(),
+//         }
+//     }
+// }
+
+// fn main() {
+//     let error1 = CombinedError::Kind(MyErrorKind::IoError(io::ErrorKind::NotFound));
+//     let error2 = CombinedError::Kind(MyErrorKind::NewError);
+
+//     println!("Error 1: {}", error1.description());
+//     println!("Error 2: {}", error2.description());
+// }
+// use std::fs::File;
+// use std::io::ErrorKind;
+
+// fn main() {
+//     let greeting_file: File = File::open("hello.txt").unwrap_or_else(|error| {
+//         if error.kind() == ErrorKind::NotFound {
+//             File::create("hello.txt").unwrap_or_else(|error| {
+//                 panic!("Problem creating the file: {error:?}");
+//             })
+//         } else {
+//             panic!("Problem opening the file: {error:?}");
+//         }
+//     });
+
+//     print!("xxxxxxxxxxxxxxxxxxxxxxxxxxxx{greeting_file:?}xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+// }
+
+// fn main() {
+//     use std::fs::File;
+//     use std::io::{self, Read};
+
+//     fn read_username_from_file() -> Result<String, io::Error> {
+//         let mut username_file = File::open("hello.txt")?;
+//         let mut username = String::new();
+//         username_file.read_to_string(&mut username)?;
+//         Ok(username)
+//     }
+
+//     let _ = read_username_from_file();
+// }
+
+// fn main() {
+//     let r: &i32;
+//     {
+//         let x: i32 = 5;
+//         r = &x;
+//     }
+
+//     println!("r: {r}");
+// }
+
+
+
+// fn main() {
+//     let x: i32 = 5;            // ----------+-- 'b
+//                           //           |
+//     let r: &i32 = &x;           // --+-- 'a  |
+//                           //   |       |
+//     println!("r: {r}");   //   |       |
+//                           // --+       |
+// }                         // ----------+
+
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
 }
+fn main() {
+    let string1: String = String::from("abcd");
+    let string2: &str = "xyz";
 
-fn greet(g1: &String, g2: &String) {
-    // note the ampersands
-    println!("{} {}!", g1, g2);
+    let result: &str = longest(string1.as_str(), string2);
+    println!("The longest string is {result}");
 }
