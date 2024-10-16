@@ -106,7 +106,7 @@ functions
     - Associated functions & Methods
     - Closures
     - Capturing
-    - As input parameters
-    - Fn, FnMut, and FnOnce
+        - As input parameters
+        - Fn, FnMut, and FnOnce
     - Error Handling in rust
     
