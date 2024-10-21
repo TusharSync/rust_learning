@@ -2301,7 +2301,6 @@
 //     print!("{:?}", greeting_file)
 // }
 
-/// The original ErrorKind enum.
 // pub enum ErrorKind {
 //     /// An entity was not found, often a file.
 //     NotFound,
@@ -2429,42 +2428,953 @@
 //     println!("Modified original array: {:?}", arr); // Output: [1, 20, 30, 4, 5]
 // }
 
-struct EventEmitter {
-    listeners: Vec<Box<dyn Fn(String)>>,
-}
+// fn main() {
+//     fn sum_odd_numbers(up_to: u32) -> u32 {
+//         let mut acc: u32 = 0;
+//         for i in 0..up_to {
+//             // Notice that the return type of this match expression must be u32
+//             // because of the type of the "addition" variable.
+//             let addition: u32 = match i%2 == 1 {
+//                 // The "i" variable is of type u32, which is perfectly fine.
+//                 true => i,
+//                 // On the other hand, the "continue" expression does not return
+//                 // u32, but it is still fine, because it never returns and therefore
+//                 // does not violate the type requirements of the match expression.
+//                 false => continue,
+//             };
+//             acc += addition;
+//         }
+//         acc
+//     }
+//     println!("Sum of odd numbers up to 9 (excluding): {}", sum_odd_numbers(9));
+// }
 
-impl EventEmitter {
-    fn new() -> Self {
-        EventEmitter {
-            listeners: Vec::new(),
-        }
-    }
+// fn main() {
 
-    fn subscribe<F>(&mut self, listener: F)
-    where
-        F: Fn(String) + 'static,
-    {
-        self.listeners.push(Box::new(listener));
-    }
+//     use std::mem;
 
-    fn emit(&self, event: String) {
-        for listener in &self.listeners {
-            listener(event.clone());
-        }
-    }
-}
+//     let color: String = String::from("green");
 
+//     // A closure to print `color` which immediately borrows (`&`) `color` and
+//     // stores the borrow and closure in the `print` variable. It will remain
+//     // borrowed until `print` is used the last time.
+//     //
+//     // `println!` only requires arguments by immutable reference so it doesn't
+//     // impose anything more restrictive.
+//     let print = |x:String| println!("{}", x);
+
+//     // Call the closure using the borrow.
+//     print("tushar".to_string());
+
+//     // `color` can be borrowed immutably again, because the closure only holds
+//     // an immutable reference to `color`.
+//     let _reborrow: &String = &color;
+//     print("tushccar".to_string());
+
+//     // A move or reborrow is allowed after the final use of `print`
+//     let _color_moved: String = color;
+
+//     let mut count: i32 = 0;
+//     // A closure to increment `count` could take either `&mut count` or `count`
+//     // but `&mut count` is less restrictive so it takes that. Immediately
+//     // borrows `count`.
+//     //
+//     // A `mut` is required on `inc` because a `&mut` is stored inside. Thus,
+//     // calling the closure mutates `count` which requires a `mut`.
+//     let mut inc = || {
+//         count += 1;
+//         println!("`count`: {}", count);
+//     };
+
+//     // Call the closure using a mutable borrow.
+//     inc();
+
+//     // The closure still mutably borrows `count` because it is called later.
+//     // An attempt to reborrow will lead to an error.
+//     // let _reborrow = &count;
+//     // ^ TODO: try uncommenting this line.
+//     inc();
+
+//     // The closure no longer needs to borrow `&mut count`. Therefore, it is
+//     // possible to reborrow without an error
+//     let _count_re_borrowed: &mut i32 = &mut count;
+
+//     // A non-copy type.
+//     let movable: Box<i32> = Box::new(3);
+
+//     // `mem::drop` requires `T` so this must take by value. A copy type
+//     // would copy into the closure leaving the original untouched.
+//     // A non-copy must move and so `movable` immediately moves into
+//     // the closure.
+//     let consume = || {
+//         println!("`movable`: {:?}", movable);
+//         mem::drop(movable);
+//     };
+
+//     // `consume` consumes the variable so this can only be called once.
+//     consume();
+//     // consume();
+//     // ^ TODO: Try uncommenting this line.
+// }
+
+// A function which takes a closure as an argument and calls it.
+// <F> denotes that F is a "Generic type parameter"
+// fn apply<F>(f: F) where
+//     // The closure takes no input and returns nothing.
+//     F: FnOnce() {
+//     // ^ TODO: Try changing this to `Fn` or `FnMut`.
+
+//     f();
+// }
+
+// // A function which takes a closure and returns an `i32`.
+// fn apply_to_3<F>(f: F) -> i32 where
+//     // The closure takes an `i32` and returns an `i32`.
+//     F: Fn(i32) -> i32 {
+
+//     f(3)
+// }
+
+// fn main() {
+//     use std::mem;
+
+//     let greeting: &str = "hello";
+//     // A non-copy type.
+//     // `to_owned` creates owned data from borrowed one
+//     let mut farewell: String = "goodbye".to_owned();
+
+//     // Capture 2 variables: `greeting` by reference and
+//     // `farewell` by value.
+//     let diary = || {
+//         // `greeting` is by reference: requires `Fn`.
+//         println!("I said {}.", greeting);
+
+//         // Mutation forces `farewell` to be captured by
+//         // mutable reference. Now requires `FnMut`.
+//         farewell.push_str("!!!");
+//         println!("Then I screamed {}.", farewell);
+//         println!("Now I can sleep. zzzzz");
+
+//         // Manually calling drop forces `farewell` to
+//         // be captured by value. Now requires `FnOnce`.
+//         mem::drop(farewell);
+//     };
+
+//     // Call the function which applies the closure.
+//     apply(diary);
+
+//     // `double` satisfies `apply_to_3`'s trait bound
+//     let double = |x: i32| 2 * x;
+
+//     println!("3 doubled: {}", apply_to_3(double));
+// }
+
+// A function which takes a closure as an argument and calls it.
+// <F> denotes that F is a "Generic type parameter"
+// fn apply<F>(f: F) where
+//     // The closure takes no input and returns nothing.
+//     F: FnOnce() {
+//     // ^ TODO: Try changing this to `Fn` or `FnMut`.
+
+//     f();
+// }
+// fn apply<F>(f: F)
+// where
+//     F: FnOnce(),
+// {
+//     f();
+// }
+
+// // A function which takes a closure and returns an `i32`.
+// fn apply_to<T, F>(f: F, value: T) -> T
+// where
+//     F: Fn(T) -> T,
+// {
+//     f(value)
+// }
+
+// fn main() {
+//     use std::mem;
+
+//     let greeting = "hello";
+//     // A non-copy type.
+//     // `to_owned` creates owned data from borrowed one
+//     let mut farewell = "goodbye".to_owned();
+
+//     // Capture 2 variables: `greeting` by reference and
+//     // `farewell` by value.
+//     let diary = || {
+//         // `greeting` is by reference: requires `Fn`.
+//         println!("I said {}.", greeting);
+
+//         // Mutation forces `farewell` to be captured by
+//         // mutable reference. Now requires `FnMut`.
+//         farewell.push_str("!!!");
+//         println!("Then I screamed {}.", farewell);
+//         println!("Now I can sleep. zzzzz");
+
+//         // Manually calling drop forces `farewell` to
+//         // be captured by value. Now requires `FnOnce`.
+//         mem::drop(farewell);
+//     };
+
+//     // Call the function which applies the closure.
+//     apply(diary);
+
+//     // `double` satisfies `apply_to_3`'s trait bound
+//     let double = |x: i32| 2 * x;
+
+//     println!("3 doubled: {}", apply_to(double,3));
+// }
+
+// fn apply_fn<F>(f: F)
+// where
+//     F: Fn(i32) -> i32,
+// {
+//     let result: i32 = f(10);
+//     println!("Fn result: {}", result);
+// }
+
+// fn main() {
+//     let add_one = |x| x + 1; // A closure that adds one to its input
+//     apply_fn(add_one); // Can be called multiple times
+//     apply_fn(add_one); // Can be called multiple times
+//     apply_fn(add_one); // Can be called multiple times
+//     apply_fn(add_one); // Can be called multiple times
+//     apply_fn(add_one); // Can be called multiple times
+
+// }
+
+// fn apply_fn_once<F>(f: F)
+// where
+//     F: FnMut(i32) -> i32,
+// {
+//     let result: i32 = f(10);
+//     println!("FnOnce result: {}", result);
+// }
+
+// fn main() {
+//     let mut s: String = String::from("Hello");
+//     let consume_string = |x: i32| {
+//         s.push_str("test");
+//         println!("Consuming: {}", s); // Takes ownership of `s`
+//         x + 1
+//     };
+//     apply_fn_once(consume_string); // Can only be called once
+// }
+
+// TODO: remove this when you're done with your implementation.
+
+// fn main() {
+//     let matrix: [[i32; 3]; 3] = [
+//         [101, 102, 103], // <-- the comment makes rustfmt add a newline
+//         [201, 202, 203],
+//         [301, 302, 303],
+//     ];
+
+//     println!("matrix: {:#?}", matrix);
+// }
+
+// fn apply_function<T>(mut f: T)
+// where
+//     T: FnMut(),
+// {
+//     f();
+// }
+
+// fn main() {
+//     // let mut counter: i32 = 0;
+//     let mut counter: i32 = 0;
+
+//     let increment = || {
+//         counter += 1;
+//         println!("Counter: {}", counter);
+//         println!("Counter: {}", counter);
+//         println!("Counter: {}", counter);
+//         println!("Counter: {}", counter);
+//         println!("Counter: {}", counter);
+//         println!("Counter: {}", counter);
+//     };
+
+//     apply_function(increment); // Counter: 1
+// }
+
+// fn apply_function<T>(mut f: T)
+// where
+//     T: FnMut(),
+// {
+//     f();
+// }
+
+// fn main() {
+//     // let mut counter: i32 = 0;
+//     let mut counter: i32 = 0;
+
+//     let increment = || {
+//         counter += 1;
+//         counter += 1;
+//         counter += 1;
+//         counter += 1;
+//         counter += 1;
+//         counter += 1;
+//         counter += 1;
+//         println!("Counter: {}", counter);
+//         println!("Counter: {}", counter);
+//         println!("Counter: {}", counter);
+//         println!("Counter: {}", counter);
+//         println!("Counter: {}", counter);
+//         println!("Counter: {}", counter);
+//     };
+
+//     apply_function(increment); // Counter: 1
+
+// }
+
+// fn apply_once<F>(mut f: F)
+// where
+//     F: FnMut(),
+// {
+//     f();
+// }
+
+// fn main() {
+//     let mut name: String = String::from("Alice");
+
+//     let greet = || {
+//         name.push_str("string");
+//         name.push_str("string");
+//         name.push_str("string");
+//         name.push_str("string");
+//         name.push_str("string");
+//         name.push_str("string");
+//         name.push_str("string");
+
+//         println!("Hello, {}", name);
+//         // drop(name);
+//     };
+
+//     apply_once(greet); // Consumes `name` and prints "Hello, Alice"
+//     // After this call, `name` cannot be used anymore
+//     // println!("{}", name); // This would cause a compile error
+// }
+
+// fn apply_fn<T>(f: T)
+// where
+//     T: FnOnce(),
+// {
+//     f();
+// }
+
+// fn main() {
+//     let greeting: String = String::from("Hello");
+//     println!("{}", greeting);
+
+//     let say_hello = || {
+//         println!("{}", greeting);
+//     };
+
+//     apply_fn(say_hello); // Prints "Hello"
+//     apply_fn(say_hello); // Prints "Hello" again
+//     apply_fn(say_hello); // Prints "Hello" again
+//     apply_fn(say_hello); // Prints "Hello" again
+//     apply_fn(say_hello); // Prints "Hello" again
+//     apply_fn(say_hello); // Prints "Hello" again
+//     apply_fn(say_hello); // Prints "Hello" again
+//     apply_fn(say_hello); // Prints "Hello" again
+//     apply_fn(say_hello); // Prints "Hello" again
+//     apply_fn(say_hello); // Prints "Hello" again
+//     apply_fn(say_hello); // Prints "Hello" again
+//     apply_fn(say_hello); // Prints "Hello" again
+//     apply_fn(say_hello); // Prints "Hello" again
+//     apply_fn(say_hello); // Prints "Hello" again
+//     apply_fn(say_hello); // Prints "Hello" again
+//     apply_fn(say_hello); // Prints "Hello" again
+// }
+
+// use std::convert::TryFrom;
+// use std::convert::TryInto;
+
+// #[derive(Debug, PartialEq)]
+// struct EvenNumber(i32);
+
+// impl TryFrom<i32> for EvenNumber {
+//     type Error = ();
+
+//     fn try_from(value: i32) -> Result<Self, Self::Error> {
+//         if value % 2 == 0 {
+//             Ok(EvenNumber(value))
+//         } else {
+//             Err(())
+//         }
+//     }
+// }
+
+// fn main() {
+//     // TryFrom
+
+//     assert_eq!(EvenNumber::try_from(8), Ok(EvenNumber(8)));
+//     assert_eq!(EvenNumber::try_from(5), Err(()));
+
+//     // TryInto
+
+//     let result: Result<EvenNumber, ()> = 8i32.try_into();
+//     assert_eq!(result, Ok(EvenNumber(8)));
+//     let result: Result<EvenNumber, ()> = 5i32.try_into();
+//     assert_eq!(result, Err(()));
+// }
+
+// use std::convert::TryInto;
+
+// use std::convert::TryInto;
+// use std::fmt;
+
+// #[derive(Debug)]
+// struct MyNumber(u8);
+
+// #[derive(Debug)]
+// struct ConversionError;
+
+// impl fmt::Display for ConversionError {
+//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+//         write!(f, "Conversion error")
+//     }
+// }
+
+// impl TryInto<MyNumber> for i32 {
+//     type Error = ConversionError;
+
+//     fn try_into(self) -> Result<MyNumber, Self::Error> {
+//         if self < 0 || self > u8::MAX as i32 {
+//             Err(ConversionError)
+//         } else {
+//             Ok(MyNumber(self as u8))
+//         }
+//     }
+// }
+
+// fn main() {
+//     let number: i32 = 10;
+
+//     // Attempt to convert i32 to MyNumber
+//     let result: Result<MyNumber, _> = number.try_into();
+
+//     match result {
+//         Ok(my_number) => println!("Conversion successful: {:?}", my_number),
+//         Err(err) => println!("Conversion failed: {}", err),
+//     }
+// }
+
+// fn main() {
+//     println!("Find the sum of all the numbers with odd squares under 1000");
+//     let upper = 1000;
+
+//     // Imperative approach
+//     // Declare accumulator variable
+//     let mut acc = 0;
+//     // Iterate: 0, 1, 2, ... to infinity
+//     for n in 0.. {
+//         // Square the number
+//         let n_squared = n * n;
+
+//         if n_squared >= upper {
+//             // Break loop if exceeded the upper limit
+//             break;
+//         } else if is_odd(n_squared) {
+//             // Accumulate value, if it's odd
+//             acc += n_squared;
+//         }
+//     }
+//     println!("imperative style: {}", acc);
+
+//     // Functional approach
+//     let sum_of_squared_odd_numbers: u32 =
+//         (0..).map(|n| n * n)                             // All natural numbers squared
+//              .take_while(|&n_squared| n_squared < upper) // Below upper limit
+//              .filter(|&n_squared| is_odd(n_squared))     // That are odd
+//              .sum();                                     // Sum them
+//     println!("functional style: {}", sum_of_squared_odd_numbers);
+// }
+
+// A module named `my_mod`
+
+// mod my_mod {
+//     // Items in modules default to private visibility.
+//     fn private_function() {
+//         println!("called `my_mod::private_function()`");
+//     }
+
+//     // Use the `pub` modifier to override default visibility.
+//     pub fn function() {
+//         println!("called `my_mod::function()`");
+//     }
+
+//     // Items can access other items in the same module,
+//     // even when private.
+//     pub fn indirect_access() {
+//         print!("called `my_mod::indirect_access()`, that\n> ");
+//         private_function();
+//     }
+
+//     // Modules can also be nested
+//     pub mod nested {
+//         pub fn function() {
+//             println!("called `my_mod::nested::function()`");
+//         }
+
+//         #[allow(dead_code)]
+//         fn private_function() {
+//             println!("called `my_mod::nested::private_function()`");
+//         }
+
+//         // Functions declared using `pub(in path)` syntax are only visible
+//         // within the given path. `path` must be a parent or ancestor module
+//         pub(in crate::my_mod) fn public_function_in_my_mod() {
+//             print!("called `my_mod::nested::public_function_in_my_mod()`, that\n> ");
+//             public_function_in_nested();
+//         }
+
+//         // Functions declared using `pub(self)` syntax are only visible within
+//         // the current module, which is the same as leaving them private
+//         pub(self) fn public_function_in_nested() {
+//             println!("called `my_mod::nested::public_function_in_nested()`");
+//         }
+
+//         // Functions declared using `pub(super)` syntax are only visible within
+//         // the parent module
+//         pub(super) fn public_function_in_super_mod() {
+//             println!("called `my_mod::nested::public_function_in_super_mod()`");
+//         }
+//     }
+
+//     pub fn call_public_function_in_my_mod() {
+//         print!("called `my_mod::call_public_function_in_my_mod()`, that\n> ");
+//         nested::public_function_in_my_mod();
+//         print!("> ");
+//         nested::public_function_in_super_mod();
+//     }
+
+//     // pub(crate) makes functions visible only within the current crate
+//     pub(crate) fn public_function_in_crate() {
+//         println!("called `my_mod::public_function_in_crate()`");
+//     }
+
+//     // Nested modules follow the same rules for visibility
+//     mod private_nested {
+//         #[allow(dead_code)]
+//         pub fn function() {
+//             println!("called `my_mod::private_nested::function()`");
+//         }
+
+//         // Private parent items will still restrict the visibility of a child item,
+//         // even if it is declared as visible within a bigger scope.
+//         #[allow(dead_code)]
+//         pub(crate) fn restricted_function() {
+//             println!("called `my_mod::private_nested::restricted_function()`");
+//         }
+//     }
+// }
+
+// mod my_module; // Declare the module
+
+// mod my {
+//     // A public struct with a public field of generic type `T`
+//     pub struct OpenBox<T> {
+//         pub contents: T,
+//     }
+
+//     // A public struct with a private field of generic type `T`
+//     pub struct ClosedBox<T> {
+//         contents: T,
+//     }
+
+//     impl<T> ClosedBox<T> {
+//         // A public constructor method
+//         pub fn new(contents: T) -> ClosedBox<T> {
+//             ClosedBox {
+//                 contents: contents,
+//             }
+//         }
+//     }
+// }
+// fn function() {
+//     println!("called `function()`");
+// }
+
+// fn main() {
+//     my_module::public_function(); // Access the public function
+//     // Modules allow disambiguation between items that have the same name.
+//     function();
+//     my_mod::function();
+
+//     // Public items, including those inside nested modules, can be
+//     // accessed from outside the parent module.
+//     my_mod::indirect_access();
+//     my_mod::nested::function();
+//     my_mod::call_public_function_in_my_mod();
+
+//     // pub(crate) items can be called from anywhere in the same crate
+//     my_mod::public_function_in_crate();
+
+//     // Public structs with public fields can be constructed as usual
+//     let open_box: my::OpenBox<&str> = my::OpenBox { contents: "public information" };
+
+//     // and their fields can be normally accessed.
+//     println!("The open box contains: {}", open_box.contents);
+
+//     // Public structs with private fields cannot be constructed using field names.
+//     // Error! `ClosedBox` has private fields
+//     //let closed_box = my::ClosedBox { contents: "classified information" };
+//     // TODO ^ Try uncommenting this line
+
+//     // However, structs with private fields can be created using
+//     // public constructors
+//     let _closed_box: my::ClosedBox<&str> = my::ClosedBox::new("classified information");
+
+//     // and the private fields of a public struct cannot be accessed.
+//     // Error! The `contents` field is private
+//     //println!("The closed box contains: {}", _closed_box.contents);
+//     // TODO ^ Try uncommenting this line
+// }
+
+// fn recursive_function(n: u64) {
+//     println!("Recursion level: {}", n);
+//     recursive_function(n + 1); // No base case, leading to infinite recursion
+// }
+
+// fn main() {
+//     recursive_function(1); // Start recursion at level 1
+// }
+
+// use std::thread;
+
+// fn recursive_function(n: u64) {
+//     println!("Recursion level: {}", n);
+//     recursive_function(n + 1); // Infinite recursion will eventually overflow
+// }
+
+// fn main() {
+//     let stack_size: usize = 64 * 1024; // Set stack size to 64 KB (just an example)
+//     let builder: thread::Builder = thread::Builder::new().stack_size(stack_size);
+
+//     let handler: Result<thread::JoinHandle<()>, std::io::Error> = builder.spawn(|| {
+//         recursive_function(1); // Start the recursive function in this thread
+//     });
+
+//     match handler {
+//         Ok(h) => {
+//             let _ = h.join(); // Wait for the thread to finish (or overflow)
+//         }
+//         Err(e) => {
+//             println!("Thread encountered an error: {:?}", e);
+//         }
+//     }
+// }
+
+// fn main() {
+//     let mut x: Box<i32> = Box::new(1);
+//     let a: i32 = *x; // *x reads the heap value, so a = 1
+//     print!("{a:?}\n");
+//     *x += 1; // *x on the left-side modifies the heap value,
+//              //     so x points to the value 2
+//     print!("{a:?}\n");
+
+//     let r1: &Box<i32> = &x; // r1 points to x on the stack
+//     let b: i32 = **r1; // two dereferences get us to the heap value
+//     print!("{b:?}bbb\n");
+
+//     let r2: &i32 = &*x; // r2 points to the heap value directly
+//     let c: i32 = *r2; // so only one dereference is needed to read it
+//     print!("{c:?}\n");
+// }
+
+// fn return_a_string() -> String {
+//     let s: String = String::from("Hello world");
+//     s
+// }
+
+// fn main(){
+//     let mut x: String = return_a_string();
+//     let y=x.clone();
+//     let z=x.clone();
+//     x.push_str("syz");
+//     print!("{x:?}");
+//     print!("{y:?}");
+//     print!("{z:?}");
+
+// }
+
+// fn main() {
+//     // let x = 5; // `x` is stored on the stack
+//     // let y = x; // `y` is a copy of `x` (x is copied because integers implement the `Copy` trait)
+//     // let z = x;
+//     // println!("x = {}, y = {} z={z}", x, y); // both `x` and `y` are valid and accessible
+
+//     let x: i32 = 10;  // `x` is on the stack
+//     let y: &i32 = &x;  // `y` is an immutable reference to `x`
+//     println!("x = {}, y = {}", x, y); // both `x` and `y` are valid
+// }
+
+// fn main() {
+//     let s1: String = String::from("Hello"); // `s1` is a String stored on the heap
+//     let s2: String = s1;                    // Ownership of the heap data is moved from `s1` to `s2`
+
+//     // println!("{}", s1);          // Error! `s1` is no longer valid
+//     println!("{}", s2);              // `s2` is now the owner of the heap data
+// }
+
+// fn main() {
+//     let s1: String = String::from("Rust");  // Heap allocation
+//     let s2: &String = &s1;                   // Immutable reference to `s1`
+//     println!("s1 = {}, s2 = {}", s1, s2); // Both `s1` and `s2` can be accessed
+// }
+// struct BankAccount {
+//     name: String,
+//     balance: f64,
+// }
+
+// impl BankAccount {
+//     // Method to read the balance (immutable reference)
+//     fn get_balance(&self) -> f64 {
+//         println!("{} has {}", self.name, self.balance);  // Use `{}` for normal formatting
+//         self.balance
+//     }
+
+//     // Method to deposit money (mutable reference)
+//     fn deposit(&mut self, amount: f64) {
+//         self.balance += amount;
+//     }
+
+//     // Method to withdraw money (mutable reference)
+//     fn withdraw(&mut self, amount: f64) -> bool {
+//         if self.balance >= amount {
+//             self.balance -= amount;
+//             true
+//         } else {
+//             false
+//         }
+//     }
+// }
+
+// fn main() {
+//     let mut account: BankAccount = BankAccount {
+//         name: String::from("Alice"),
+//         balance: 1000.0,
+//     };
+
+//     // Multiple components can read the balance concurrently (immutable reference)
+//     let balance_reader1: &BankAccount = &account;  // Immutable reference to account
+//     let balance_reader2: &BankAccount = &account;  // Another immutable reference
+//     println!("Balance Reader 1 sees: ${}", balance_reader1.get_balance());
+//     println!("Balance Reader 2 sees: ${}", balance_reader2.get_balance());
+
+//     // You cannot modify the balance while it’s being read:
+//     // account.deposit(500.0); // This will cause a compile-time error because immutable borrows exist
+
+//     // After the immutable references are done, we can modify the account
+//     account.deposit(500.0);  // Now we can modify the balance
+//     println!("New balance after deposit: ${}", account.get_balance());
+
+//     account.withdraw(300.0);
+//     println!("New balance after withdrawal: ${}", account.get_balance());
+// }
+
+// fn main() {
+//     // let colors: Vec<&str> = vec!["blue", "red", "green"];
+//     // // method 1: access vector elements using vector index
+//     // println!("first color = {}", colors[0]);
+//     // println!("second color = {}", colors[1]);
+//     // println!("third color = {}", colors[2]);
+//     // // method 2: access vector elements using get() method and vector index
+//     // println!("first color = {:?}", colors.get(7));
+//     // println!("second color = {:?}", colors.get(1).unwrap());
+//     // println!("third color = {:?}", colors.get(2).unwrap());
+//     // mutable vector
+//     let v: Vec<i32> = vec![2, 4, 6, 8, 10];
+//     let mut even_numbers: Vec<i32> = vec![2, 4, 6, 8, 10];
+
+//     println!("original vector = {:?}", v);
+
+//     // push values at the end of the vector
+//     even_numbers.push(12);
+//     even_numbers.push(14);
+
+//     println!("changed vector = {:?}", v);
+//     println!("changed even vector = {:?}", even_numbers);
+//     // remove value from the vector in its second index
+//     even_numbers.remove(22);
+// }
+
+// fn main() {
+//     let colors: Vec<&str> = vec!["blue", "red", "green"];
+
+//     let mut index: i32 = 0;
+
+//     // loop through a vector to print its index and value
+//     for color in colors {
+//         println!("Index: {} -- Value: {}", index, color);
+//         index = index + 1;
+//     }
+
+//     let v: Vec<i32> = Vec::new();
+//     print!("{v:?}")
+// }
+
+// fn main() {
+//     // let v: Vec<i32> = vec![1, 2, 3, 4, 5];
+
+//     // // let does_not_exist = &v[1];
+//     // let does_not_exist = v.get(1);
+
+//     // print!("{does_not_exist:?}");
+//     // print!("{v:?}");
+//     // let mut v = vec![1, 2, 3, 4, 5];
+
+//     // let first = &v[0];
+
+//     // println!("The first element is: {first}");
+//     // v.push(6);
+
+//     // println!("The v element is: {v:?}");
+//     let mut v: Vec<i32> = vec![100, 32, 57];
+//     for i in &mut v {
+//         // *i += 50;
+//         // *i += 50;
+//         // *i += 50;
+//         // *i += 50;
+//         // *i += 50;
+//         // *i += 50;
+//         print!("{i:?}\n")
+//     }
+//     print!("{v:?}\n");
+// }
+
+// #![allow(unused)]
+// fn main() {
+//     use std::ptr;
+//     use std::mem;
+
+//     let v: Vec<usize> = vec![1, 2, 3];
+
+//     // Prevent running `v`'s destructor so we are in complete control
+//     // of the allocation.
+//     let mut v: mem::ManuallyDrop<Vec<usize>> = mem::ManuallyDrop::new(v);
+
+//     // Pull out the various important pieces of information about `v`
+//     let p: *mut usize = v.as_mut_ptr();
+//     let len: usize = v.len();
+//     let cap: usize = v.capacity();
+
+//     unsafe {
+//         // Overwrite memory with 4, 5, 6
+//         for i in 0..len {
+//             ptr::write(p.add(i), 4 + i);
+//         }
+
+//         // Put everything back together into a Vec
+//         let rebuilt: Vec<usize> = Vec::from_raw_parts(p, len, cap);
+//         assert_eq!(rebuilt, [4, 5, 6]);
+//     }
+// }
+
+// fn main() {
+//     use std::collections::HashMap;
+
+//     let mut scores: HashMap<String, i32> = HashMap::new();
+
+//     scores.insert(String::from("Blue"), 10);
+//     scores.insert(String::from("Yellow"), 50);
+//     scores.insert(String::from("Yellow1"), 50);
+//     scores.insert(String::from("Yellow2"), 50);
+//     scores.insert(String::from("Yellow3"), 50);
+//     scores.insert(String::from("Yellow4"), 504);
+//     scores.entry("key3".to_string()).or_insert(30);
+//     scores.entry("key3".to_string()).or_insert(30);
+
+//     print!("before------{scores:?}\n");
+
+//     for (key, value) in &scores {
+//         println!("{}: {}", key, value);
+//     }
+//     let filtered_map: HashMap<_, _> = scores
+//     .iter()
+//     .filter(|&(_key, &value)| value > 10)
+//     // .map(|(key, &value)| (*key, value)) // Deref to copy the key-value pair
+//     .collect();
+
+//     print!("{filtered_map:?}\n");
+//     print!("{scores:?}\n");
+
+//     print!("{:?}\n", scores.len());
+// }
+
+// use std::collections::HashMap;
+
+// fn main() {
+//     let mut map: HashMap<i32, i32> = HashMap::new();
+//     map.insert(1, 10);
+//     map.insert(2, 20);
+//     map.insert(3, 5);
+//     print!("{map:?}");
+//     let filtered_map: HashMap<_, _> = map
+//         .iter()
+//         .filter(|&(_key, &value)| value > 10)
+//         .map(|(&key, &value)| (key, value)) // Copying the integers
+//         .collect();
+
+//     println!("{:?}", filtered_map); // Output: {1: 10, 2: 20}
+// }
+    
+
+// #![allow(unused)]
+// fn main() {
+//     use std::collections::HashSet;
+//     // Type inference lets us omit an explicit type signature (which
+//     // would be `HashSet<String>` in this example).
+//     let mut books = HashSet::new();
+    
+//     // Add some books.
+//     books.insert("A Dance With Dragons".to_string());
+//     books.insert("To Kill a Mockingbird".to_string());
+//     books.insert("The Odyssey".to_string());
+//     books.insert("The Great Gatsby".to_string());
+    
+//     // Check for a specific one.
+//     if !books.contains("The Winds of Winter") {
+//         println!("We have {} books, but The Winds of Winter ain't one.",
+//                  books.len());
+//     }
+    
+
+//     print!("{books:?}");
+//     // Remove a book.
+//     books.remove("The Odyssey");
+    
+//     // Iterate over everything.
+//     for book in &books {
+//         println!("{book}");
+//     }
+// }
+
+
+
+#![allow(unused)]
 fn main() {
-    let mut emitter: EventEmitter = EventEmitter::new();
-    print!("111111111111111111111\n");
-    emitter.subscribe(|event| {
-        println!("Received event: {}\n", event);
-    });
-    print!("222222222222222222222222222\n");
-
-    emitter.emit("Event 1".to_string());
-    print!("33333333333333333333333333333\n");
-
-    emitter.emit("Event 2".to_string());
-    print!("4444444444444444444444444444444444444\n");
+    use std::collections::HashSet;
+    #[derive(Hash, Eq, PartialEq, Debug)]
+    struct Viking {
+        name: String,
+        power: usize,
+    }
+    
+    let mut vikings: HashSet<Viking> = HashSet::new();
+    
+    vikings.insert(Viking { name: "Einar".to_string(), power: 9 });
+    vikings.insert(Viking { name: "Einar".to_string(), power: 9 });
+    vikings.insert(Viking { name: "Olaf".to_string(), power: 4 });
+    vikings.insert(Viking { name: "Harald".to_string(), power: 8 });
+    print!("{vikings:?}");
+    // // Use derived implementation to print the vikings.
+    // for x in &vikings {
+    //     println!("{x:?}");
+    // }
 }
