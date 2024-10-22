@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>WebAssembly Example</h1>
+    <button onclick="callWasm()">Call WebAssembly Function</button>
+    <script>
+        // Load the WebAssembly module
+        const wasmModule = fetch('add.wasm')
+            .then(response => response.arrayBuffer())
+            .then(bytes => WebAssembly.instantiate(bytes))
+            .then(result => {
+                console.log(result.instance.exports?.add,"lllllll");
+                
+                // Exported add function is accessible now
+                window.add = result.instance.exports.add;
+            });
+
+        // JavaScript function to call Wasm function
+        function callWasm() {
+            const result = window.add(5, 7);
+            alert('Result from WebAssembly: ' + result);
+        }
+    </script>
+</body>
+</html>

@@ -3323,7 +3323,6 @@
 
 //     println!("{:?}", filtered_map); // Output: {1: 10, 2: 20}
 // }
-    
 
 // #![allow(unused)]
 // fn main() {
@@ -3331,50 +3330,521 @@
 //     // Type inference lets us omit an explicit type signature (which
 //     // would be `HashSet<String>` in this example).
 //     let mut books = HashSet::new();
-    
+
 //     // Add some books.
 //     books.insert("A Dance With Dragons".to_string());
 //     books.insert("To Kill a Mockingbird".to_string());
 //     books.insert("The Odyssey".to_string());
 //     books.insert("The Great Gatsby".to_string());
-    
+
 //     // Check for a specific one.
 //     if !books.contains("The Winds of Winter") {
 //         println!("We have {} books, but The Winds of Winter ain't one.",
 //                  books.len());
 //     }
-    
 
 //     print!("{books:?}");
 //     // Remove a book.
 //     books.remove("The Odyssey");
-    
+
 //     // Iterate over everything.
 //     for book in &books {
 //         println!("{book}");
 //     }
 // }
 
+// #![allow(unused)]
+// fn main() {
+//     use std::collections::HashSet;
+//     #[derive(Hash, Eq, PartialEq, Debug)]
+//     struct Viking {
+//         name: String,
+//         power: usize,
+//     }
+
+//     let mut vikings: HashSet<Viking> = HashSet::new();
+
+//     vikings.insert(Viking { name: "Einar".to_string(), power: 9 });
+//     vikings.insert(Viking { name: "Einar".to_string(), power: 9 });
+//     vikings.insert(Viking { name: "Olaf".to_string(), power: 4 });
+//     vikings.insert(Viking { name: "Harald".to_string(), power: 8 });
+//     print!("{vikings:?}");
+//     // // Use derived implementation to print the vikings.
+//     // for x in &vikings {
+//     //     println!("{x:?}");
+//     // }
+// }
+
+// use std::collections::HashSet;
+
+// fn main() {
+//     let set1: HashSet<_> = [1, 2, 3].iter().cloned().collect();
+//     let set2: HashSet<_> = [3, 4, 5].iter().cloned().collect();
+//     let union: HashSet<_> = set1.union(&set2).cloned().collect();
+//     let intersection: HashSet<_> = set1.intersection(&set2).cloned().collect();
+//     let difference: HashSet<_> = set1.difference(&set2).cloned().collect();
+//     let symmetric_difference: HashSet<_> = set1.symmetric_difference(&set2).cloned().collect();
+//     print!("{union:?}union\n");
+//     print!("{intersection:?}intersection\n");
+//     print!("{difference:?}difference\n");
+//     print!("{symmetric_difference:?}symmetric_difference\n");
+//     let mut set_clone: HashSet<i32> = set1.clone();
+//     // set_clone.clear();
+//     print!("{set_clone:?}\n");
+
+//     for value in set_clone.iter() {
+//         println!("{}---------------", value);
+//     }
+
+//     for value in set_clone.drain() {
+//         println!("{}", value);
+//     }
+
+//     let mut set: HashSet<i32> = HashSet::new();
+//     set.insert(1);
+//     set.insert(2);
+//     set.insert(3);
+
+//     // Using get method and storing the value in a second variable
+//     if let Some(&value) = set.get(&2) {
+//         let second_variable: i32 = value; // Store the value in a second variable
+//         let third_variable: i32 = value; // Store the value in a second variable
+//         println!("Found: {}", second_variable);
+//         println!("Found: {}", third_variable);
+
+//     } else {
+//         println!("Not found");
+//     }
+// }
+
+// Defining a declarative macro using `macro_rules!`
+// macro_rules! mainu {
+//     // Base case: single argument, just return it
+//     ($x:expr) => {
+//         $x
+//     };
+
+//     // Recursive case: compare two or more arguments
+//     ($x:expr, $($rest:expr),+) => {
+//         // Compare the current element with the result of the rest
+//         std::cmp::min($x, mainu!($($rest),+))
+//     };
+// }
+
+// fn main() {
+//     let result1: i32 = mainu!(3);
+//     let result2: i32 = mainu!(5, 2, 8, 1, 4);
+
+//     println!("The minimum of 3 is: {}", result1);
+//     println!("The minimum of (5, 2, 8, 1, 4) is: {}", result2);
+// }
+// #[derive(Debug)]
+// struct Node {
+//     value: i32,
+//     next: Option<Box<Node>>,
+// }
+
+// #[derive(Debug)]
+// struct MyLinkedList {
+//     head: Option<Box<Node>>,
+// }
+
+// impl MyLinkedList {
+//     // Create a new empty LinkedList
+//     fn new() -> Self {
+//         MyLinkedList { head: None }
+//     }
+
+//     // Add a new node at the beginning of the list
+//     fn push(&mut self, value: i32) {
+//         let new_node: Box<Node> = Box::new(Node {
+//             value,
+//             next: self.head.take(),
+//         });
+//         self.head = Some(new_node);
+//     }
+
+//     // Print all elements in the list
+//     fn print_list(&self) {
+//         let mut current_node: &Option<Box<Node>> = &self.head;
+//         while let Some(node) = current_node {
+//             print!("{} -> ", node.value);
+//             current_node = &node.next;
+//         }
+//         println!("None");
+//     }
+
+//      // Get the node at the specified index and return its value and the address of the next node
+//     fn get_node(&self, index: usize) -> Option<(&i32, Option<&Box<Node>>)> {
+//         let mut current: &Option<Box<Node>> = &self.head;
+//         let mut current_index = 0;
+
+//         while let Some(ref node) = current {
+//             if current_index == index {
+//                 return Some((&node.value, node.next.as_ref()));
+//             }
+//             current_index += 1;
+//             current = &node.next;
+//         }
+
+//         // If the index is out of range, return None
+//         None
+//     }
+// }
+
+// fn main() {
+// let mut list: MyLinkedList = MyLinkedList::new();
+
+// // Adding elements to the list
+// list.push(10);
+// list.push(20);
+// list.push(30);
+// list.push(40);
+// // list.push(50);
+// // list.push(60);
+
+// // Printing the list
+// list.print_list(); // Output: 30 -> 20 -> 10 -> None
+
+//  // Testing the get_node method
+//  if let Some((value, next)) = list.get_node(0) {
+//     println!("Value at index 0: {}, Next address: {:?}", value, next); // Output: Value at index 0: 30, Next address: Some(Node { value: 20, next: Some(Node { value: 10, next: None }) })
+// } else {
+//     println!("Index 0 not found");
+// }
+
+// if let Some((value, next)) = list.get_node(1) {
+//     println!("Value at index 1: {}, Next address: {:?}", value, next); // Output: Value at index 1: 20, Next address: Some(Node { value: 10, next: None })
+// } else {
+//     println!("Index 1 not found");
+// }
+
+// if let Some((value, next)) = list.get_node(2) {
+//     println!("Value at index 2: {}, Next address: {:?}", value, next); // Output: Value at index 2: 10, Next address: None
+// } else {
+//     println!("Index 2 not found");
+// }
+//     use std::collections::LinkedList;
+
+//     // 1. Create a new LinkedList
+//     let mut list: LinkedList<i32> = LinkedList::new();
+//     // 2. Adding elements
+//     list.push_front(1); // Adds 1 at the front: List = [1]
+//     list.push_back(2); // Adds 2 at the end:   List = [1, 2]
+//     list.push_back(3); // Adds 3 at the end:   List = [1, 2, 3]
+//     list.push_front(0); // Adds 0 at the front: List = [0, 1, 2, 3]
+//     print!("{list:?}");
+
+//     // 3. Accessing elements without removing them
+//     if let Some(front) = list.front() {
+//         println!("Front element: {}", front); // Output: Front element: 0
+//     }
+
+//     if let Some(back) = list.back() {
+//         println!("Back element: {}", back); // Output: Back element: 3
+//     }
+
+//     // 4. Removing elements
+//     let first: Option<i32> = list.pop_front(); // Removes and returns the front element (0), List = [1, 2, 3]
+//     println!("Removed front element: {:?}", first); // Output: Removed front element: Some(0)
+
+//     let last: Option<i32> = list.pop_back(); // Removes and returns the last element (3), List = [1, 2]
+//     println!("Removed back element: {:?}", last); // Output: Removed back element: Some(3)
+
+//     // 5. Checking length and if the list is empty
+//     println!("Current length: {}", list.len()); // Output: Current length: 2
+//     println!("Is the list empty? {}", list.is_empty()); // Output: Is the list empty? false
+
+//     // 6. Iterating over the list
+//     println!("Current list values:");
+//     for value in &list {
+//         println!("{}", value); // Output: 1, 2
+//     }
+
+//     // 7. Clear the list
+//     list.clear();
+//     println!("List cleared. Is the list empty now? {}", list.is_empty()); // Output: List cleared. Is the list empty now? true
+
+// }
+
+// #[derive(Debug)]
+// pub struct List<T> {
+//     head: Link<T>,
+// }
+
+// type Link<T> = Option<Box<Node<T>>>;
+
+// #[derive(Debug)]
+// struct Node<T> {
+//     elem: T,
+//     next: Link<T>,
+// }
+
+// impl<T> List<T> {
+//     pub fn new() -> Self {
+//         List { head: None }
+//     }
+
+//     pub fn push(&mut self, elem: T) {
+//         let new_node: Box<Node<T>> = Box::new(Node {
+//             elem: elem,
+//             next: self.head.take(),
+//         });
+
+//         self.head = Some(new_node);
+//     }
+
+//     pub fn pop(&mut self) -> Option<T> {
+//         self.head.take().map(|node: Box<Node<T>>| {
+//             self.head = node.next;
+//             node.elem
+//         })
+//     }
+
+//     pub fn peek(&self) -> Option<&T> {
+//         self.head.as_ref().map(|node: &Box<Node<T>>| &node.elem)
+//     }
+// }
+
+// impl<T> Drop for List<T> {
+//     fn drop(&mut self) {
+//         let mut cur_link: Option<Box<Node<T>>> = self.head.take();
+//         while let Some(mut boxed_node) = cur_link {
+//             cur_link = boxed_node.next.take();
+//         }
+//     }
+// }
+
+// fn main() {
+//     let mut list: List<i32> = List::new();
+
+//     // // Populate list
+//     list.push(1);
+//     list.push(2);
+//     list.push(3);
+//     list.push(4);
+//     list.push(5);
+//     // print!("{list:?}");
+//     print!("{:?}",list.peek())
+// }
+
+// use std::collections::LinkedList;
+
+// #[derive(Debug)]
+// struct BrowserHistory {
+//     history: LinkedList<String>,
+//     future: LinkedList<String>,
+// }
+
+// impl BrowserHistory {
+//     fn new() -> Self {
+//         BrowserHistory {
+//             history: LinkedList::new(),
+//             future: LinkedList::new(),
+//         }
+//     }
+
+//     fn visit(&mut self, page: String) {
+//         self.history.push_back(page);
+//         self.future.clear(); // Clear the forward history on a new visit
+//     }
+
+//     fn back(&mut self) -> Option<String> {
+//         if let Some(current) = self.history.pop_back() {
+//             self.future.push_front(current.clone());
+//             Some(current)
+//         } else {
+//             None
+//         }
+//     }
+
+//     fn forward(&mut self) -> Option<String> {
+//         if let Some(next) = self.future.pop_front() {
+//             self.history.push_back(next.clone());
+//             Some(next)
+//         } else {
+//             None
+//         }
+//     }
+
+//     fn current(&self) -> Option<&String> {
+//         self.history.back()
+//     }
+// }
+
+// fn main() {
+//     let mut browser: BrowserHistory = BrowserHistory::new();
+//     browser.visit("home".to_string());
+//     browser.visit("page1".to_string());
+//     browser.visit("page2".to_string());
+
+//     println!("Current Page: {:?}", browser.current());
+
+//     browser.back();
+//     println!("After Back, Current Page: {:?}", browser.current());
+
+//     browser.forward();
+//     println!("After Forward, Current Page: {:?}", browser.current());
+
+//     browser.visit("page3".to_string());
+//     println!("After Visiting a New Page, Current Page: {:?}", browser.current());
+// }
+
+// use std::collections::LinkedList;
+
+// #[allow(dead_code)]
+// fn main() {
+//     #[derive(Debug)]
+//     struct Task {
+//         description: String,
+//         priority: u32,
+//     }
+
+//     #[derive(Debug)]
+//     struct TaskScheduler {
+//         tasks: LinkedList<Task>,
+//     }
+
+//     impl TaskScheduler {
+//         fn new() -> Self {
+//             TaskScheduler {
+//                 tasks: LinkedList::new(),
+//             }
+//         }
+
+//         fn add_task(&mut self, description: String, priority: u32) {
+//             let task: Task = Task {
+//                 description,
+//                 priority,
+//             };
+//             self.tasks.push_back(task);
+//         }
+
+//         fn execute_task(&mut self) -> Option<Task> {
+//             self.tasks.pop_front()
+//         }
+
+//         fn peek_next_task(&self) -> Option<&Task> {
+//             self.tasks.front()
+//         }
+//     }
+//     let mut scheduler: TaskScheduler = TaskScheduler::new();
+
+//     scheduler.add_task("Write report".to_string(), 1);
+//     scheduler.add_task("Fix bugs".to_string(), 2);
+//     scheduler.add_task("Attend meeting".to_string(), 3);
+
+//     println!("Next Task: {:?}", scheduler.peek_next_task());
+
+//     while let Some(task) = scheduler.execute_task() {
+//         println!("Executing Task: {:?}", task);
+//     }
+// }
 
 
-#![allow(unused)]
-fn main() {
-    use std::collections::HashSet;
-    #[derive(Hash, Eq, PartialEq, Debug)]
-    struct Viking {
-        name: String,
-        power: usize,
+
+
+use std::collections::LinkedList;
+
+#[derive(Debug)]
+struct Song {
+    title: String,
+    artist: String,
+}
+
+#[derive(Debug)]
+struct Playlist {
+    songs: LinkedList<Song>,
+    current_index: usize,
+}
+
+impl Playlist {
+    fn new() -> Self {
+        Playlist {
+            songs: LinkedList::new(),
+            current_index: 0,
+        }
     }
-    
-    let mut vikings: HashSet<Viking> = HashSet::new();
-    
-    vikings.insert(Viking { name: "Einar".to_string(), power: 9 });
-    vikings.insert(Viking { name: "Einar".to_string(), power: 9 });
-    vikings.insert(Viking { name: "Olaf".to_string(), power: 4 });
-    vikings.insert(Viking { name: "Harald".to_string(), power: 8 });
-    print!("{vikings:?}");
-    // // Use derived implementation to print the vikings.
-    // for x in &vikings {
-    //     println!("{x:?}");
-    // }
+
+    fn add_song(&mut self, title: String, artist: String) {
+        let song: Song = Song { title, artist };
+        self.songs.push_back(song);
+    }
+
+    fn next(&mut self) -> Option<&Song> {
+        if self.songs.is_empty() {
+            return None;
+        }
+
+        self.current_index = (self.current_index + 1) % self.songs.len();
+        self.songs.iter().nth(self.current_index)
+    }
+
+    fn previous(&mut self) -> Option<&Song> {
+        if self.songs.is_empty() {
+            return None;
+        }
+
+        if self.current_index == 0 {
+            self.current_index = self.songs.len() - 1;
+        } else {
+            self.current_index -= 1;
+        }
+        self.songs.iter().nth(self.current_index)
+    }
+
+    fn current_song(&self) -> Option<&Song> {
+        self.songs.iter().nth(self.current_index)
+    }
+}
+
+fn main() {
+    let mut playlist: Playlist = Playlist::new();
+
+    // Adding some songs to the playlist
+    playlist.add_song("Song 1".to_string(), "Artist A".to_string());
+    playlist.add_song("Song 2".to_string(), "Artist B".to_string());
+    playlist.add_song("Song 3".to_string(), "Artist C".to_string());
+
+    // Viewing the current song
+    if let Some(song) = playlist.current_song() {
+        println!("Currently Playing: {} by {}", song.title, song.artist);
+    } else {
+        println!("No songs in the playlist.");
+    }
+
+    // Moving to the next song
+    if let Some(song) = playlist.next() {
+        println!("Next Song: {} by {}", song.title, song.artist);
+    }
+
+    // Moving to the previous song
+    if let Some(song) = playlist.previous() {
+        println!("Previous Song: {} by {}", song.title, song.artist);
+    }
+
+    // Trying to go beyond the playlist to check looping
+    if let Some(song) = playlist.next() {
+        println!("Next Song: {} by {}", song.title, song.artist);
+    }
+
+    if let Some(song) = playlist.next() {
+        println!("Next Song: {} by {}", song.title, song.artist);
+    }
+
+    if let Some(song) = playlist.next() {
+        println!("Next Song: {} by {}", song.title, song.artist);
+    }
+
+    if let Some(song) = playlist.next() {
+        println!("Next Song: {} by {}", song.title, song.artist);
+    }
+
+    if let Some(song) = playlist.next() {
+        println!("Next Song: {} by {}", song.title, song.artist);
+    }
+
+    if let Some(song) = playlist.next() {
+        println!("Next Song: {} by {}", song.title, song.artist);
+    }
 }
