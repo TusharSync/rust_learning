@@ -3628,223 +3628,277 @@
 //     print!("{:?}",list.peek())
 // }
 
-// use std::collections::LinkedList;
+// #![allow(unused)]
+// fn main() {
+//     use std::collections::BinaryHeap;
+
+//     // Type inference lets us omit an explicit type signature (which
+//     // would be `BinaryHeap<i32>` in this example).
+//     let mut heap: BinaryHeap<i32> = BinaryHeap::new();
+
+//     // We can use peek to look at the next item in the heap. In this case,
+//     // there's no items in there yet so we get None.
+//     assert_eq!(heap.peek(), None);
+
+//     // Let's add some scores...
+//     heap.push(1);
+//     heap.push(5);
+//     heap.push(2);
+//     // heap.push(7);
+//     // heap.push(8);
+//     // heap.push(9);
+//     // heap.push(99);
+//     // heap.push(45);
+//     // heap.push(65);
+//     // heap.push(3);
+//     // heap.push(5);
+//     // heap.push(51);
+//     // heap.push(50);
+//     // heap.push(21);
+//     // heap.push(27);
+// // 99, 65, 51, 45, 5, 50, 27, 1, 7, 3, 5, 2, 9, 8, 21
+//     print!("{:?}\n", heap);
+//     // a random order.
+//     for x in &heap {
+//         println!("{x}");
+//     }
+
+//     // We can clear the heap of any remaining items.
+//     heap.clear();
+
+//     // The heap should now be empty.
+//     assert!(heap.is_empty())
+// }
 
 // #[derive(Debug)]
-// struct BrowserHistory {
-//     history: LinkedList<String>,
-//     future: LinkedList<String>,
+// pub struct MinHeap {
+//     data: Vec<i32>,
 // }
 
-// impl BrowserHistory {
-//     fn new() -> Self {
-//         BrowserHistory {
-//             history: LinkedList::new(),
-//             future: LinkedList::new(),
+// impl MinHeap {
+//     /// Creates a new, empty MinHeap
+//     pub fn new() -> Self {
+//         MinHeap { data: Vec::new() }
+//     }
+
+//     /// Returns the parent index of a given child index
+//     fn parent_index(&self, index: usize) -> usize {
+//         (index - 1) / 2
+//     }
+
+//     /// Returns the left child index of a given parent index
+//     fn left_child_index(&self, index: usize) -> usize {
+//         2 * index + 1
+//     }
+
+//     /// Returns the right child index of a given parent index
+//     fn right_child_index(&self, index: usize) -> usize {
+//         2 * index + 2
+//     }
+
+//     /// Inserts a new element into the heap
+//     pub fn insert(&mut self, value: i32) {
+//         // Add the value to the end of the array
+//         self.data.push(value);
+
+//         // Heapify up from the last element
+//         let mut index: usize = self.data.len() - 1;
+//         while index > 0 {
+//             let parent = self.parent_index(index);
+//             if self.data[index] < self.data[parent] {
+//                 self.data.swap(index, parent);
+//             }
+//             index = parent;
 //         }
 //     }
 
-//     fn visit(&mut self, page: String) {
-//         self.history.push_back(page);
-//         self.future.clear(); // Clear the forward history on a new visit
+//     /// Retrieves the minimum element without removing it
+//     pub fn peek(&self) -> Option<&i32> {
+//         self.data.first()
 //     }
 
-//     fn back(&mut self) -> Option<String> {
-//         if let Some(current) = self.history.pop_back() {
-//             self.future.push_front(current.clone());
-//             Some(current)
-//         } else {
-//             None
+//     /// Extracts and returns the minimum element from the heap
+//     pub fn extract_min(&mut self) -> Option<i32> {
+//         if self.data.len() == 0 {
+//             return None;
 //         }
-//     }
 
-//     fn forward(&mut self) -> Option<String> {
-//         if let Some(next) = self.future.pop_front() {
-//             self.history.push_back(next.clone());
-//             Some(next)
-//         } else {
-//             None
-//         }
-//     }
+//         let min = self.data.swap_remove(0);
 
-//     fn current(&self) -> Option<&String> {
-//         self.history.back()
-//     }
-// }
+//         if !self.data.is_empty() {
+//             // Heapify down from the root element
+//             let mut index = 0;
+//             let last_index = self.data.len() - 1;
 
-// fn main() {
-//     let mut browser: BrowserHistory = BrowserHistory::new();
-//     browser.visit("home".to_string());
-//     browser.visit("page1".to_string());
-//     browser.visit("page2".to_string());
+//             loop {
+//                 let left: usize = self.left_child_index(index);
+//                 let right: usize = self.right_child_index(index);
 
-//     println!("Current Page: {:?}", browser.current());
+//                 let mut smallest: usize = index;
 
-//     browser.back();
-//     println!("After Back, Current Page: {:?}", browser.current());
+//                 if left <= last_index && self.data[left] < self.data[smallest] {
+//                     smallest = left;
+//                 }
 
-//     browser.forward();
-//     println!("After Forward, Current Page: {:?}", browser.current());
+//                 if right <= last_index && self.data[right] < self.data[smallest] {
+//                     smallest = right;
+//                 }
 
-//     browser.visit("page3".to_string());
-//     println!("After Visiting a New Page, Current Page: {:?}", browser.current());
-// }
-
-// use std::collections::LinkedList;
-
-// #[allow(dead_code)]
-// fn main() {
-//     #[derive(Debug)]
-//     struct Task {
-//         description: String,
-//         priority: u32,
-//     }
-
-//     #[derive(Debug)]
-//     struct TaskScheduler {
-//         tasks: LinkedList<Task>,
-//     }
-
-//     impl TaskScheduler {
-//         fn new() -> Self {
-//             TaskScheduler {
-//                 tasks: LinkedList::new(),
+//                 if smallest != index {
+//                     self.data.swap(index, smallest);
+//                     index = smallest;
+//                 } else {
+//                     break;
+//                 }
 //             }
 //         }
 
-//         fn add_task(&mut self, description: String, priority: u32) {
-//             let task: Task = Task {
-//                 description,
-//                 priority,
-//             };
-//             self.tasks.push_back(task);
-//         }
+//         Some(min)
+//     }
+// }
 
-//         fn execute_task(&mut self) -> Option<Task> {
-//             self.tasks.pop_front()
-//         }
+// fn main() {
+//     let mut heap: MinHeap = MinHeap::new();
+//     heap.insert(10);
+//     heap.insert(3);
+//     heap.insert(5);
+//     heap.insert(1);
+//     heap.insert(55);
+//     heap.insert(2);
 
-//         fn peek_next_task(&self) -> Option<&Task> {
-//             self.tasks.front()
+//     print!("{:?}\n", heap);
+//     println!("Min element: {:?}", heap.peek()); // Should output: 1
+
+//     println!("Extract Min: {:?}", heap.extract_min()); // Should output: 1
+//     println!("Min element after extraction: {:?}", heap.peek()); // Should output: 3
+
+//     heap.insert(2);
+//     println!("Min element after inserting 2: {:?}", heap.peek()); // Should output: 2
+// }
+
+
+// Define a generic Stack struct
+// #[derive(Debug)]
+// struct Stack<T> {
+//     elements: Vec<T>,
+// }
+
+// impl<T> Stack<T> {
+//     // Create a new, empty stack
+//     fn new() -> Self {
+//         Stack {
+//             elements: Vec::new(),
 //         }
 //     }
-//     let mut scheduler: TaskScheduler = TaskScheduler::new();
 
-//     scheduler.add_task("Write report".to_string(), 1);
-//     scheduler.add_task("Fix bugs".to_string(), 2);
-//     scheduler.add_task("Attend meeting".to_string(), 3);
+//     // Push an element onto the stack
+//     fn push(&mut self, item: T) {
+//         self.elements.push(item);
+//     }
 
-//     println!("Next Task: {:?}", scheduler.peek_next_task());
+//     // Pop an element off the stack
+//     fn pop(&mut self) -> Option<T> {
+//         self.elements.pop()
+//     }
 
-//     while let Some(task) = scheduler.execute_task() {
-//         println!("Executing Task: {:?}", task);
+//     // Peek at the top element without removing it
+//     fn peek(&self) -> Option<&T> {
+//         self.elements.last()
+//     }
+
+//     // Check if the stack is empty
+//     fn is_empty(&self) -> bool {
+//         self.elements.is_empty()
+//     }
+
+//     // Get the size of the stack
+//     // fn size(&self) -> usize {
+//     //     self.elements.len()
+//     // }
+// }
+
+// fn main() {
+//     // Create a new stack of integers
+//     let mut stack: Stack<i32> = Stack::new();
+
+//     // Push elements onto the stack
+//     stack.push(1);
+//     stack.push(2);
+//     stack.push(3);
+//     print!("{:?}",stack);
+//     // Peek at the top element
+//     if let Some(top) = stack.peek() {
+//         println!("Top element is: {}", top);
+//     }
+
+//     // Pop elements off the stack
+//     while let Some(top) = stack.pop() {
+//         println!("Popped element: {}", top);
+//     }
+
+//     // Check if the stack is empty
+//     if stack.is_empty() {
+//         println!("The stack is empty!");
 //     }
 // }
 
 
+// use std::io::{self, Write};
 
+// fn main() {
+//     print!("Enter your name: ");
+//     // Make sure to flush stdout to immediately print the prompt
+//     io::stdout().flush().expect("Failed to flush");
 
-use std::collections::LinkedList;
+//     // Create a mutable string to store the input
+//     let mut input: String = String::new();
+    
+//     // Read the input from the standard input (stdin)
+//     io::stdin()
+//         .read_line(&mut input)
+//         .expect("Failed to read line");
 
-#[derive(Debug)]
-struct Song {
-    title: String,
-    artist: String,
-}
+//     // Remove the trailing newline character
+//     let input = input.trim();
 
-#[derive(Debug)]
-struct Playlist {
-    songs: LinkedList<Song>,
-    current_index: usize,
-}
+//     println!("Hello, {}!", input);
+// }
+// use rpassword::read_password;
 
-impl Playlist {
-    fn new() -> Self {
-        Playlist {
-            songs: LinkedList::new(),
-            current_index: 0,
-        }
-    }
+// use std::io::{self, Write};
 
-    fn add_song(&mut self, title: String, artist: String) {
-        let song: Song = Song { title, artist };
-        self.songs.push_back(song);
-    }
+// fn main() {
+//     // Function to read input from the user
+//     fn read_input(prompt: &str) -> String {
+//         print!("{}", prompt);
+//         // Ensure the prompt is printed immediately
+//         io::stdout().flush().expect("Failed to flush stdout");
 
-    fn next(&mut self) -> Option<&Song> {
-        if self.songs.is_empty() {
-            return None;
-        }
+//         // Create a mutable string to hold the user input
+//         let mut input: String = String::new();
+        
+//         // Read input from stdin and handle errors
+//         io::stdin()
+//             .read_line(&mut input)
+//             .expect("Failed to read line");
 
-        self.current_index = (self.current_index + 1) % self.songs.len();
-        self.songs.iter().nth(self.current_index)
-    }
+//         // Remove any trailing whitespace or newlines
+//         input.trim().to_string()
+//     }
 
-    fn previous(&mut self) -> Option<&Song> {
-        if self.songs.is_empty() {
-            return None;
-        }
+//     // Ask for the first name
+//     let first_name: String = read_input("Enter your first name: ");
+    
+//     // Ask for the email
+//     let email: String = read_input("Enter your email: ");
+    
+//     print!("Enter your password: ");
+//     io::stdout().flush().expect("Failed to flush stdout");
+//     let password: String = read_password().expect("Failed to read password");
 
-        if self.current_index == 0 {
-            self.current_index = self.songs.len() - 1;
-        } else {
-            self.current_index -= 1;
-        }
-        self.songs.iter().nth(self.current_index)
-    }
-
-    fn current_song(&self) -> Option<&Song> {
-        self.songs.iter().nth(self.current_index)
-    }
-}
-
-fn main() {
-    let mut playlist: Playlist = Playlist::new();
-
-    // Adding some songs to the playlist
-    playlist.add_song("Song 1".to_string(), "Artist A".to_string());
-    playlist.add_song("Song 2".to_string(), "Artist B".to_string());
-    playlist.add_song("Song 3".to_string(), "Artist C".to_string());
-
-    // Viewing the current song
-    if let Some(song) = playlist.current_song() {
-        println!("Currently Playing: {} by {}", song.title, song.artist);
-    } else {
-        println!("No songs in the playlist.");
-    }
-
-    // Moving to the next song
-    if let Some(song) = playlist.next() {
-        println!("Next Song: {} by {}", song.title, song.artist);
-    }
-
-    // Moving to the previous song
-    if let Some(song) = playlist.previous() {
-        println!("Previous Song: {} by {}", song.title, song.artist);
-    }
-
-    // Trying to go beyond the playlist to check looping
-    if let Some(song) = playlist.next() {
-        println!("Next Song: {} by {}", song.title, song.artist);
-    }
-
-    if let Some(song) = playlist.next() {
-        println!("Next Song: {} by {}", song.title, song.artist);
-    }
-
-    if let Some(song) = playlist.next() {
-        println!("Next Song: {} by {}", song.title, song.artist);
-    }
-
-    if let Some(song) = playlist.next() {
-        println!("Next Song: {} by {}", song.title, song.artist);
-    }
-
-    if let Some(song) = playlist.next() {
-        println!("Next Song: {} by {}", song.title, song.artist);
-    }
-
-    if let Some(song) = playlist.next() {
-        println!("Next Song: {} by {}", song.title, song.artist);
-    }
-}
+//     // Display the collected information (omit or handle this securely in real-world applications)
+//     println!("\nCollected Information:");
+//     println!("First Name: {}", first_name);
+//     println!("Email: {}", email);
+//     println!("Password: {}", password); // In a real scenario, avoid printing passwords
+// }
