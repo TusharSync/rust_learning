@@ -3776,7 +3776,6 @@
 //     println!("Min element after inserting 2: {:?}", heap.peek()); // Should output: 2
 // }
 
-
 // Define a generic Stack struct
 // #[derive(Debug)]
 // struct Stack<T> {
@@ -3842,7 +3841,6 @@
 //     }
 // }
 
-
 // use std::io::{self, Write};
 
 // fn main() {
@@ -3852,7 +3850,7 @@
 
 //     // Create a mutable string to store the input
 //     let mut input: String = String::new();
-    
+
 //     // Read the input from the standard input (stdin)
 //     io::stdin()
 //         .read_line(&mut input)
@@ -3876,7 +3874,7 @@
 
 //         // Create a mutable string to hold the user input
 //         let mut input: String = String::new();
-        
+
 //         // Read input from stdin and handle errors
 //         io::stdin()
 //             .read_line(&mut input)
@@ -3888,10 +3886,10 @@
 
 //     // Ask for the first name
 //     let first_name: String = read_input("Enter your first name: ");
-    
+
 //     // Ask for the email
 //     let email: String = read_input("Enter your email: ");
-    
+
 //     print!("Enter your password: ");
 //     io::stdout().flush().expect("Failed to flush stdout");
 //     let password: String = read_password().expect("Failed to read password");
@@ -3902,3 +3900,332 @@
 //     println!("Email: {}", email);
 //     println!("Password: {}", password); // In a real scenario, avoid printing passwords
 // }
+
+// use std::process::Command;
+
+// fn main() {
+//     // Spawn a separate process to run an external command (e.g., `ls` to list files)
+//     let output: std::process::Output = Command::new("ls") // Use "dir" if you're on Windows
+//         .arg("-l") // Adding an argument to the command
+//         .output()
+//         .expect("Failed to execute command");
+
+//     // Check if the command was successful
+//     if output.status.success() {
+//         let stdout: std::borrow::Cow<'_, str> = String::from_utf8_lossy(&output.stdout);
+//         println!("Command output:\n{}", stdout);
+//     } else {
+//         let stderr: std::borrow::Cow<'_, str> = String::from_utf8_lossy(&output.stderr);
+//         eprintln!("Command failed:\n{}", stderr);
+//     }
+// }
+
+// use std::thread;
+// use std::time::Duration;
+
+// fn main() {
+//     let mut handles: Vec<thread::JoinHandle<()>> = vec![];
+
+//     // Create 5 worker threads
+//     for i in 0..5 {
+//         // Spawn a thread and push the handle into the vector
+//         let handle: thread::JoinHandle<()> = thread::spawn(move || {
+//             // Simulate processing work with a sleep
+//             println!("Thread {} is processing a task...", i);
+//             thread::sleep(Duration::from_secs(10));
+//             println!("Thread {} has completed the task.", i);
+//         });
+
+//         // Store the handle so we can wait for the thread to finish later
+//         handles.push(handle);
+//     }
+
+//     // Wait for all threads to complete
+//     for handle in handles {
+//         handle.join().expect("Failed to join thread");
+//     }
+
+//     println!("All threads have completed their tasks.");
+// }
+
+// use std::process::Command;
+// use std::thread;
+// use std::time::Duration;
+
+// fn main() {
+//     let mut handles: Vec<thread::JoinHandle<()>> = vec![];
+
+//     // Create threads to simulate concurrent processing
+//     for i in 0..3 {
+//         let handle: thread::JoinHandle<()> = thread::spawn(move || {
+//             // Simulate doing some work
+//             println!("Thread {} is processing data...", i);
+//             thread::sleep(Duration::from_secs(2));
+//             println!("Thread {} finished processing data.", i);
+
+//             // Let's assume that after processing, we want to call an external command
+//             if i == 2 {
+//                 // Example: Running an external command like `echo`
+//                 let output: std::process::Output = Command::new("echo")
+//                     .arg(format!("Hello from thread {}", i))
+//                     .output()
+//                     .expect("Failed to execute external command");
+
+//                 if output.status.success() {
+//                     let stdout: std::borrow::Cow<'_, str> = String::from_utf8_lossy(&output.stdout);
+//                     println!("Thread {}: External command output:\n{}", i, stdout);
+//                 } else {
+//                     let stderr = String::from_utf8_lossy(&output.stderr);
+//                     eprintln!("Thread {}: External command failed:\n{}", i, stderr);
+//                 }
+//             }
+//         });
+
+//         handles.push(handle);
+//     }
+
+//     // Wait for all threads to complete
+//     for handle in handles {
+//         handle.join().expect("Failed to join thread");
+//     }
+
+//     println!("All threads have completed their tasks.");
+// }
+
+// use std::process::{Command, Stdio};
+// use std::thread;
+// use std::time::Duration;
+// // use std::io::{self, Write};
+
+// fn spawn_threads_in_process() {
+//     let handles: Vec<_> = (1..=3).map(|i| {
+//         thread::spawn(move || {
+//             for j in 1..=5 {
+//                 println!("Thread {}: iteration {}", i, j);
+//                 thread::sleep(Duration::from_millis(500)); // Simulate some work
+//             }
+//         })
+//     }).collect();
+
+//     // Wait for all threads to finish
+//     for handle in handles {
+//         handle.join().unwrap();
+//     }
+// }
+
+// fn main() {
+//     // Creating a new process using std::process::Command
+//     let mut child: std::process::Child = Command::new("echo")
+//         .arg("Starting a new process with threads inside it...")
+//         .stdout(Stdio::inherit())
+//         .spawn()
+//         .expect("Failed to start process");
+
+//     // Wait for the process to finish
+//     let _ = child.wait().expect("Failed to wait on process");
+
+//     // Now, simulate multiple threads inside this process
+//     println!("Spawning threads in the main process:");
+//     spawn_threads_in_process();
+
+//     println!("All threads have finished their execution.");
+// }
+
+// use std::sync::{Arc, Mutex};
+// use std::thread;
+// use std::time::Duration;
+
+// // Represents the number of seats in the theater
+// const NUM_SEATS: usize = 10;
+
+// fn main() {
+//     // Create a shared vector of seats, all initially unbooked (false)
+//     let seats: Vec<bool> = vec![false; NUM_SEATS];
+//     let shared_seats: Arc<Mutex<Vec<bool>>> = Arc::new(Mutex::new(seats));
+
+//     // Create threads simulating users trying to book seats
+//     let mut handles: Vec<thread::JoinHandle<()>> = vec![];
+
+//     for user_id in 1..=5 {
+//         // Clone the shared Arc<Mutex> to pass into the thread
+//         let seats_clone: Arc<Mutex<Vec<bool>>> = Arc::clone(&shared_seats);
+
+//         let handle: thread::JoinHandle<()> = thread::spawn(move || {
+//             for attempt in 1..=3 {
+//                 // Try to book a seat
+//                 let mut seats: std::sync::MutexGuard<'_, Vec<bool>> = seats_clone.lock().expect("Failed to acquire lock");
+
+//                 if let Some(index) = seats.iter_mut().position(|&mut booked| !booked) {
+//                     // Book the seat if available
+//                     seats[index] = true;
+//                     println!("User {} successfully booked seat {} on attempt {}", user_id, index + 1, attempt);
+//                     break;
+//                 } else {
+//                     println!("User {} found no available seats on attempt {}", user_id, attempt);
+//                     thread::sleep(Duration::from_millis(100)); // Wait before retrying
+//                 }
+//             }
+//         });
+
+//         handles.push(handle);
+//     }
+
+//     // Wait for all threads to complete
+//     for handle in handles {
+//         handle.join().expect("Failed to join thread");
+//     }
+
+//     // Print final seat bookings
+//     let final_seats: std::sync::MutexGuard<'_, Vec<bool>> = shared_seats.lock().expect("Failed to acquire lock");
+//     println!("Final seat bookings: {:?}", final_seats);
+// }
+
+// with lock
+// use std::sync::{Arc, Mutex};
+// use std::thread;
+
+// fn main() {
+//     // Create a shared counter with initial value 0
+//     let counter: Arc<Mutex<i32>> = Arc::new(Mutex::new(0));
+
+//     // Create multiple threads
+//     let mut handles: Vec<thread::JoinHandle<()>> = vec![];
+
+//     for _ in 0..10 {
+//         let counter_clone: Arc<Mutex<i32>> = Arc::clone(&counter);
+//         let handle: thread::JoinHandle<()> = thread::spawn(move || {
+//             // Lock the mutex to gain access to the counter
+//             let mut num: std::sync::MutexGuard<'_, i32> = counter_clone.lock().unwrap();
+//             *num += 1;
+//         });
+//         handles.push(handle);
+//     }
+
+//     // Wait for all threads to complete
+//     for handle in handles {
+//         handle.join().unwrap();
+//     }
+
+//     // Print the final value of the counter
+//     println!("Final counter value: {}", *counter.lock().unwrap());
+// }
+
+// use std::sync::{Arc, Mutex};
+// use std::thread;
+
+// fn main() {
+//     let counter: Arc<Mutex<i32>> = Arc::new(Mutex::new(0));
+
+//     let mut handles: Vec<thread::JoinHandle<()>> = vec![];
+
+//     for _ in 0..10 {
+//         let counter_clone: Arc<Mutex<i32>> = Arc::clone(&counter);
+
+//         // Spawn a new thread
+//         let handle: thread::JoinHandle<()> = thread::spawn(move || {
+//             // Directly access the counter without locking
+//             let _num: i32 = *counter_clone.lock().unwrap(); // This works correctly
+
+//             // Uncomment the following line to see the error
+//             // *counter_clone += 1;  // Compilation error: cannot dereference Arc<Mutex>
+//         });
+
+//         handles.push(handle);
+//     }
+
+//     for handle in handles {
+//         handle.join().unwrap();
+//     }
+
+//     println!("Final counter value: {}", *counter.lock().unwrap());
+// }
+
+// #![allow(unused)]
+// fn main() {
+//     use std::collections::BTreeMap;
+
+//     // type inference lets us omit an explicit type signature (which
+//     // would be `BTreeMap<&str, &str>` in this example).
+//     let mut movie_reviews: BTreeMap<&str, &str> = BTreeMap::new();
+
+//     // review some movies.
+//     movie_reviews.insert("Office Space", "Deals with real issues in the workplace.");
+//     movie_reviews.insert("Pulp Fiction", "Masterpiece.");
+//     movie_reviews.insert("The Godfather", "Very enjoyable.");
+//     movie_reviews.insert("The Blues Brothers", "Eye lyked it a lot.");
+//     print!("{movie_reviews:?}");
+    // // check for a specific one.
+    // if !movie_reviews.contains_key("Les Misérables") {
+    //     println!(
+    //         "We've got {} reviews, but Les Misérables ain't one.",
+    //         movie_reviews.len()
+    //     );
+    // }
+
+    // // oops, this review has a lot of spelling mistakes, let's delete it.
+    // movie_reviews.remove("The Blues Brothers");
+
+    // // look up the values associated with some keys.
+    // let to_find: [&str; 2] = ["Up!", "Office Space"];
+    // for movie in &to_find {
+    //     match movie_reviews.get(movie) {
+    //         Some(review) => println!("{movie}: {review}"),
+    //         None => println!("{movie} is unreviewed."),
+    //     }
+    // }
+    // let getreview: Option<&&str> = movie_reviews.get("Pulp Fiction");
+
+    // // The base string to concatenate the review if it exists
+    // let mut base_string: String = "Movie Review: ".to_string();
+
+    // match getreview {
+    //     Some(&review) => {
+    //         // Concatenate the review to the base string
+    //         base_string.push_str(review);
+    //     }
+    //     None => {
+    //         // Optionally, you can add a default message for not found cases
+    //         base_string.push_str("None");
+    //     }
+    // }
+
+    // // Look up the value for a key (will panic if the key is not found).
+    // println!("Movie review: {}", movie_reviews["Pulp Fiction"]);
+    // println!("Movie xxxxxxxxxxxxxxxxxxxxreview: {:?}", base_string);
+
+    // // iterate over everything.
+    // for (movie, review) in &movie_reviews {
+    //     println!("{movie}: \"{review}\"");
+    // }
+// }
+
+use std::collections::BTreeSet;
+
+fn main() {
+    let mut set = BTreeSet::new();
+    
+    // Inserting elements
+    set.insert(10);
+    set.insert(20);
+    set.insert(30);
+    set.insert(5);
+    
+    // Attempting to insert a duplicate
+    let duplicate_insertion: bool = set.insert(10); // Will return false since 10 already exists
+    print!("{duplicate_insertion}");
+    // Removing an element
+    set.remove(&20);
+    
+    // Checking for membership
+    if set.contains(&10) {
+        println!("Set contains 10");
+    } else {
+        println!("Set does not contain 10");
+    }
+    
+    // Iterating over the set
+    for element in &set {
+        println!("{}", element);
+    }
+}
+
