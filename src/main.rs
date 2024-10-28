@@ -4572,51 +4572,71 @@
 //     println!("{}", lock.is_poisoned());
 // }
 
+// use std::sync::mpsc::{Sender, Receiver};
+// use std::sync::mpsc;
+// use std::thread;
 
-use std::sync::mpsc::{Sender, Receiver};
-use std::sync::mpsc;
-use std::thread;
+// static N_THREADS: i32 = 3;
 
-static N_THREADS: i32 = 3;
+// fn main() {
+//     // Channels have two endpoints: the `Sender<T>` and the `Receiver<T>`,
+//     // where `T` is the type of the message to be transferred
+//     // (type annotation is superfluous)
+//     let (tx, rx): (Sender<i32>, Receiver<i32>) = mpsc::channel();
+//     let mut children: Vec<thread::JoinHandle<()>> = Vec::new();
 
-fn main() {
-    // Channels have two endpoints: the `Sender<T>` and the `Receiver<T>`,
-    // where `T` is the type of the message to be transferred
-    // (type annotation is superfluous)
-    let (tx, rx): (Sender<i32>, Receiver<i32>) = mpsc::channel();
-    let mut children: Vec<thread::JoinHandle<()>> = Vec::new();
+//     for id in 0..N_THREADS {
+//         // The sender endpoint can be copied
+//         let thread_tx: Sender<i32> = tx.clone();
 
-    for id in 0..N_THREADS {
-        // The sender endpoint can be copied
-        let thread_tx: Sender<i32> = tx.clone();
+//         // Each thread will send its id via the channel
+//         let child: thread::JoinHandle<()> = thread::spawn(move || {
+//             // The thread takes ownership over `thread_tx`
+//             // Each thread queues a message in the channel
+//             thread_tx.send(id).unwrap();
 
-        // Each thread will send its id via the channel
-        let child: thread::JoinHandle<()> = thread::spawn(move || {
-            // The thread takes ownership over `thread_tx`
-            // Each thread queues a message in the channel
-            thread_tx.send(id).unwrap();
+//             // Sending is a non-blocking operation, the thread will continue
+//             // immediately after sending its message
+//             println!("thread {} finished", id);
+//         });
 
-            // Sending is a non-blocking operation, the thread will continue
-            // immediately after sending its message
-            println!("thread {} finished", id);
-        });
+//         children.push(child);
+//     }
 
-        children.push(child);
+//     // Here, all the messages are collected
+//     let mut ids: Vec<Result<i32, mpsc::RecvError>> = Vec::with_capacity(N_THREADS as usize);
+//     for _ in 0..N_THREADS {
+//         // The `recv` method picks a message from the channel
+//         // `recv` will block the current thread if there are no messages available
+//         ids.push(rx.recv());
+//     }
+
+//     // Wait for the threads to complete any remaining work
+//     for child in children {
+//         child.join().expect("oops! the child thread panicked");
+//     }
+
+//     // Show the order in which the messages were sent
+//     println!("{:?}", ids);
+// }
+
+impl Solution {
+    pub fn merge_alternately(word1: String, word2: String) -> String {
+        let mut combination_word: String = String::new();
+
+        // Determine the maximum length of the words
+        let len_1: usize = word1.len();
+        let len_2: usize = word2.len();
+        let max_len: usize = len_1.max(len_2);
+
+        for i in 0..max_len {
+            if i < len_1 {
+                combination_word.push(word1.chars().nth(i).unwrap());
+            }
+            if i < len_2 {
+                combination_word.push(word2.chars().nth(i).unwrap());
+            }
+        }
+        return combination_word;
     }
-
-    // Here, all the messages are collected
-    let mut ids: Vec<Result<i32, mpsc::RecvError>> = Vec::with_capacity(N_THREADS as usize);
-    for _ in 0..N_THREADS {
-        // The `recv` method picks a message from the channel
-        // `recv` will block the current thread if there are no messages available
-        ids.push(rx.recv());
-    }
-    
-    // Wait for the threads to complete any remaining work
-    for child in children {
-        child.join().expect("oops! the child thread panicked");
-    }
-
-    // Show the order in which the messages were sent
-    println!("{:?}", ids);
 }
