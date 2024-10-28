@@ -4154,78 +4154,469 @@
 //     movie_reviews.insert("The Godfather", "Very enjoyable.");
 //     movie_reviews.insert("The Blues Brothers", "Eye lyked it a lot.");
 //     print!("{movie_reviews:?}");
-    // // check for a specific one.
-    // if !movie_reviews.contains_key("Les Misérables") {
-    //     println!(
-    //         "We've got {} reviews, but Les Misérables ain't one.",
-    //         movie_reviews.len()
-    //     );
-    // }
-
-    // // oops, this review has a lot of spelling mistakes, let's delete it.
-    // movie_reviews.remove("The Blues Brothers");
-
-    // // look up the values associated with some keys.
-    // let to_find: [&str; 2] = ["Up!", "Office Space"];
-    // for movie in &to_find {
-    //     match movie_reviews.get(movie) {
-    //         Some(review) => println!("{movie}: {review}"),
-    //         None => println!("{movie} is unreviewed."),
-    //     }
-    // }
-    // let getreview: Option<&&str> = movie_reviews.get("Pulp Fiction");
-
-    // // The base string to concatenate the review if it exists
-    // let mut base_string: String = "Movie Review: ".to_string();
-
-    // match getreview {
-    //     Some(&review) => {
-    //         // Concatenate the review to the base string
-    //         base_string.push_str(review);
-    //     }
-    //     None => {
-    //         // Optionally, you can add a default message for not found cases
-    //         base_string.push_str("None");
-    //     }
-    // }
-
-    // // Look up the value for a key (will panic if the key is not found).
-    // println!("Movie review: {}", movie_reviews["Pulp Fiction"]);
-    // println!("Movie xxxxxxxxxxxxxxxxxxxxreview: {:?}", base_string);
-
-    // // iterate over everything.
-    // for (movie, review) in &movie_reviews {
-    //     println!("{movie}: \"{review}\"");
-    // }
+// // check for a specific one.
+// if !movie_reviews.contains_key("Les Misérables") {
+//     println!(
+//         "We've got {} reviews, but Les Misérables ain't one.",
+//         movie_reviews.len()
+//     );
 // }
 
-use std::collections::BTreeSet;
+// // oops, this review has a lot of spelling mistakes, let's delete it.
+// movie_reviews.remove("The Blues Brothers");
+
+// // look up the values associated with some keys.
+// let to_find: [&str; 2] = ["Up!", "Office Space"];
+// for movie in &to_find {
+//     match movie_reviews.get(movie) {
+//         Some(review) => println!("{movie}: {review}"),
+//         None => println!("{movie} is unreviewed."),
+//     }
+// }
+// let getreview: Option<&&str> = movie_reviews.get("Pulp Fiction");
+
+// // The base string to concatenate the review if it exists
+// let mut base_string: String = "Movie Review: ".to_string();
+
+// match getreview {
+//     Some(&review) => {
+//         // Concatenate the review to the base string
+//         base_string.push_str(review);
+//     }
+//     None => {
+//         // Optionally, you can add a default message for not found cases
+//         base_string.push_str("None");
+//     }
+// }
+
+// // Look up the value for a key (will panic if the key is not found).
+// println!("Movie review: {}", movie_reviews["Pulp Fiction"]);
+// println!("Movie xxxxxxxxxxxxxxxxxxxxreview: {:?}", base_string);
+
+// // iterate over everything.
+// for (movie, review) in &movie_reviews {
+//     println!("{movie}: \"{review}\"");
+// }
+// }
+
+// use std::collections::BTreeSet;
+
+// fn main() {
+//     let mut set = BTreeSet::new();
+
+//     // Inserting elements
+//     set.insert(10);
+//     set.insert(20);
+//     set.insert(30);
+//     set.insert(5);
+
+//     // Attempting to insert a duplicate
+//     let duplicate_insertion: bool = set.insert(10); // Will return false since 10 already exists
+//     print!("{duplicate_insertion}");
+//     // Removing an element
+//     set.remove(&20);
+
+//     // Checking for membership
+//     if set.contains(&10) {
+//         println!("Set contains 10");
+//     } else {
+//         println!("Set does not contain 10");
+//     }
+
+//     // Iterating over the set
+//     for element in &set {
+//         println!("{}", element);
+//     }
+// }
+
+// use std::sync::Arc;
+// #[derive(Debug)]
+// struct Truck {
+//     capacity: i32,
+// }
+
+// fn main() {
+
+//     let (truck_a, truck_b, truck_c) = (
+//         Arc::new(Truck { capacity: 1 }),
+//         Arc::new(Truck { capacity: 2 }),
+//         Arc::new(Truck { capacity: 3 }),
+//     );
+//     let thread:std::thread::JoinHandle<(Vec<Arc<Truck>>, Vec<Arc<Truck>>)> = std::thread::spawn(move ||{
+//         let facility_one:Vec<Arc<Truck>>= vec![Arc::clone(&truck_a), Arc::clone(&truck_b)];
+//         let facility_two:Vec<Arc<Truck>>  = vec![Arc::clone(&truck_b), Arc::clone(&truck_c)];
+//         (facility_one,facility_two)
+//     });
+//     let (facility_one,facility_two) = thread.join().unwrap();
+//     let truck_b__clone: Arc<Truck>   = Arc::clone(&facility_one[1]);
+//     print!("{:?}\n,{:?}\n", facility_one, facility_two);
+//     print!("before{:?}\n",Arc::strong_count(&truck_b__clone));
+//     drop(facility_two);
+//     print!("after{:?}\n",Arc::strong_count(&truck_b__clone));
+// }
+
+// Rc Example - Single-threaded
+// use std::rc::Rc;
+
+// fn main() {
+//     let rc_data: Rc<String> = Rc::new(String::from("Hello, Rc!"));
+
+//     let rc_clone1: Rc<String> = Rc::clone(&rc_data); // One clone
+//     let rc_clone2: Rc<String> = Rc::clone(&rc_data); // Another clone
+//     let counter_rc: usize = Rc::strong_count(&rc_data);
+//     println!("Rc count: {}", counter_rc); // Output: 3
+//     println!("Data: {}", rc_clone1);
+//     println!("Data: {}", rc_clone2);
+//     drop(rc_clone1);
+//     drop(rc_clone2);
+//     println!("Rc count: {}", counter_rc); // Output: 3
+//     drop(rc_data);
+//     println!("Rc count: {}", counter_rc); // Output: 3
+// }
+
+// // Arc Example - Multi-threaded
+// use std::sync::{Arc, Mutex};
+// use std::thread;
+
+// fn main() {
+//     let arc_data: Arc<Mutex<i32>> = Arc::new(Mutex::new(42)); // Atomic reference count with mutex
+
+//     let mut handles: Vec<thread::JoinHandle<()>> = vec![];
+
+//     for _ in 0..10 {
+//         let arc_clone: Arc<Mutex<i32>> = Arc::clone(&arc_data);
+//         let handle: thread::JoinHandle<()> = thread::spawn(move || {
+//             let mut data: std::sync::MutexGuard<'_, i32> = arc_clone.lock().unwrap();
+//             *data += 1;
+//         });
+//         handles.push(handle);
+//     }
+
+//     for handle in handles {
+//         handle.join().unwrap();
+//     }
+
+//     println!("Data: {}", *arc_data.lock().unwrap()); // Output: 52
+// }
+
+// use std::sync::Arc;
+// use std::thread;
+
+// fn main() {
+//     // Create an Arc pointing to an immutable vector
+//     let numbers: Arc<Vec<i32>> = Arc::new(vec![1, 2, 3, 4, 5]);
+
+//     println!("Initial strong count: {}", Arc::strong_count(&numbers));
+
+//     let mut handles: Vec<thread::JoinHandle<()>> = vec![];
+
+//     for i in 0..5 {
+//         // Clone the Arc to increase the reference count
+//         let numbers_clone: Arc<Vec<i32>> = Arc::clone(&numbers);
+
+//         // Print the strong count after cloning
+//         println!("Strong count after XXXXXX__cloning__XXXXXX for thread {}: {}", i, Arc::strong_count(&numbers));
+
+//         // Spawn a new thread, passing the cloned Arc
+//         let handle: thread::JoinHandle<()> = thread::spawn(move || {
+//             println!("Thread {}: {:?}", i, numbers_clone);
+
+//             // Since each clone is moved into the thread, we can check the count inside
+//             println!("Strong count ----inside---- thread {}: {}", i, Arc::strong_count(&numbers_clone));
+//         });
+
+//         handles.push(handle);
+//     }
+
+//     // Print the strong count before waiting for threads
+//     println!("Strong count before joining threads: {}", Arc::strong_count(&numbers));
+
+//     // Wait for all threads to finish
+//     for handle in handles {
+//         handle.join().unwrap();
+//     }
+
+//     // Print the strong count after all threads are joined
+//     println!("Strong count after all threads finished: {}", Arc::strong_count(&numbers));
+// }
+
+// use std::sync::Arc;
+// use std::thread;
+
+// fn main() {
+//     let document: Arc<String> = Arc::new("Project Plan - October Update".to_string());
+
+//     let mut handles: Vec<thread::JoinHandle<()>> = vec![];
+
+//     for i in 0..4 {
+//         let doc_clone: Arc<String> = Arc::clone(&document);
+
+//         let handle: thread::JoinHandle<()> = thread::spawn(move || {
+//             println!("Team Member {} reading: {}", i, doc_clone);
+//         });
+
+//         handles.push(handle);
+//     }
+
+//     for handle in handles {
+//         handle.join().unwrap();
+//     }
+
+//     println!("Total team members who accessed: {}", Arc::strong_count(&document));
+// }
+
+// use std::sync::{Arc, Mutex};
+// use std::thread;
+
+// fn main() {
+//     // Create a shared integer protected by a Mutex inside an Arc
+//     let counter: Arc<Mutex<i32>> = Arc::new(Mutex::new(0));
+
+//     let mut handles: Vec<thread::JoinHandle<()>> = vec![];
+
+//     for _ in 0..10 {
+//         let counter_clone: Arc<Mutex<i32>> = Arc::clone(&counter);
+
+//         let handle: thread::JoinHandle<()> = thread::spawn(move || {
+//             // Lock the mutex before modifying the counter
+//             let mut num: std::sync::MutexGuard<'_, i32> = counter_clone.lock().unwrap();
+//             *num += 1; // Increment the counter
+//         });
+
+//         handles.push(handle);
+//     }
+
+//     // Wait for all threads to finish
+//     for handle in handles {
+//         handle.join().unwrap();
+//     }
+
+//     // Access the final value of the counter
+//     println!("Final counter value: {}", counter.lock().unwrap());
+// }
+
+// use std::sync::{Arc, Mutex};
+// use std::thread;
+
+// fn main() {
+//     // Create a shared bank account balance protected by a Mutex inside an Arc
+//     let balance: Arc<Mutex<i32>> = Arc::new(Mutex::new(100)); // Initial balance of 100
+
+//     let mut handles: Vec<thread::JoinHandle<()>> = vec![];
+
+//     for _ in 0..5 {
+//         let balance_clone: Arc<Mutex<i32>> = Arc::clone(&balance);
+
+//         let handle: thread::JoinHandle<()> = thread::spawn(move || {
+//             // Lock the mutex before modifying the balance
+//             let mut balance_guard: std::sync::MutexGuard<'_, i32> = balance_clone.lock().unwrap();
+//             *balance_guard += 50; // Each customer deposits 50
+//         });
+
+//         handles.push(handle);
+//     }
+
+//     // Wait for all threads to finish
+//     for handle in handles {
+//         handle.join().unwrap();
+//     }
+
+//     // Access the final balance
+//     println!("Final account balance: {}", *balance.lock().unwrap());
+// }
+
+// use std::sync::Arc;
+// use std::thread;
+// use std::sync::atomic;
+// fn main() {
+//     // Use Arc to share a raw pointer across threads
+//     let balance: Arc<atomic::AtomicI32> = Arc::new(atomic::AtomicI32::new(100)); // Shared atomic value
+
+//     let mut handles: Vec<thread::JoinHandle<()>> = vec![];
+
+//     for _ in 0..5 {
+//         let balance_clone: Arc<atomic::AtomicI32> = Arc::clone(&balance);
+
+//         // Spawn multiple threads attempting to increment the shared balance
+//         let handle: thread::JoinHandle<()> = thread::spawn(move || {
+//             for _ in 0..50 {
+//                 // Simulating concurrent increment without Mutex (Atomic operation)
+//                 let current_value: i32 = balance_clone.load(atomic::Ordering::Relaxed);
+//                 let new_value: i32 = current_value + 1;
+//                 balance_clone.store(new_value, atomic::Ordering::Relaxed);
+//             }
+//         });
+
+//         handles.push(handle);
+//     }
+
+//     // Wait for all threads to complete
+//     for handle in handles {
+//         handle.join().unwrap();
+//     }
+
+//     // Check final balance
+//     let final_balance = balance.load(std::sync::atomic::Ordering::Relaxed);
+//     println!("Final balance: {}", final_balance);
+// }
+
+// use std::sync::{Arc, Mutex};
+// use std::thread;
+
+// fn main() {
+//     let balance: Arc<Mutex<i32>> = Arc::new(Mutex::new(100)); // Shared data protected by Mutex
+
+//     let mut handles: Vec<thread::JoinHandle<()>> = vec![];
+
+//     for _ in 0..5 {
+//         let balance_clone: Arc<Mutex<i32>> = Arc::clone(&balance);
+
+//         let handle: thread::JoinHandle<()> = thread::spawn(move || {
+//             for _ in 0..50 {
+//                 let mut num: std::sync::MutexGuard<'_, i32> = balance_clone.lock().unwrap();
+//                 *num += 1;
+//             }
+//         });
+
+//         handles.push(handle);
+//     }
+
+//     for handle in handles {
+//         handle.join().unwrap();
+//     }
+
+//     println!("Final balance with Mutex: {}", *balance.lock().unwrap());
+// }
+
+// #![allow(unused)]
+// fn main() {
+//     use std::sync::RwLock;
+
+//     let lock: RwLock<i32> = RwLock::new(5);
+
+//     // many reader locks can be held at once
+//     {
+//         let r1: std::sync::RwLockReadGuard<'_, i32> = lock.read().unwrap();
+//         let r2: std::sync::RwLockReadGuard<'_, i32> = lock.read().unwrap();
+//         print!("{:?}", r1);
+//         print!("{:?}", r2);
+//     } // read locks are dropped at this point
+
+//     // only one write lock may be held, however
+//     // {
+//     {
+//         let mut w: std::sync::RwLockWriteGuard<'_, i32> = lock.write().unwrap();
+//         *w += 1;
+//         print!("{:?}", w);
+//     }
+
+//     {
+//         let mut w: std::sync::RwLockWriteGuard<'_, i32> = lock.write().unwrap();
+//         *w += 1;
+//         print!("{:?}", w);
+//     }
+//     {
+//         let mut w: std::sync::RwLockWriteGuard<'_, i32> = lock.write().unwrap();
+//         *w += 1;
+//         print!("{:?}", w);
+//     }
+
+//     {
+//         let mut w: std::sync::RwLockWriteGuard<'_, i32> = lock.write().unwrap();
+//         *w += 1;
+//         print!("{:?}", w);
+//     }
+//     {
+//         let mut w: std::sync::RwLockWriteGuard<'_, i32> = lock.write().unwrap();
+//         *w += 1;
+//         print!("{:?}", w);
+//     }
+
+//     // } // write lock is dropped here
+// }
+
+// #![allow(unused)]
+// fn main() {
+//     use std::sync::{Arc, RwLock};
+//     use std::thread;
+
+//     let lock: Arc<RwLock<i32>> = Arc::new(RwLock::new(1));
+//     let c_lock: Arc<RwLock<i32>> = Arc::clone(&lock);
+
+//     let n: std::sync::RwLockReadGuard<'_, i32> = lock.read().unwrap();
+
+//     println!("{},{}",*n, 1);
+
+//     thread::spawn(move || {
+//         let r: Result<std::sync::RwLockReadGuard<'_, i32>, std::sync::PoisonError<std::sync::RwLockReadGuard<'_, i32>>> = c_lock.read();
+//         println!("{}",r.is_ok());
+
+//         let r: Result<std::sync::RwLockReadGuard<'_, i32>, std::sync::PoisonError<std::sync::RwLockReadGuard<'_, i32>>> = c_lock.read();
+//         println!("{}",r.is_ok());
+//     }).join().unwrap();
+// }
+
+// #![allow(unused)]
+// fn main() {
+//     use std::sync::{Arc, RwLock};
+//     use std::thread;
+
+//     let lock: Arc<RwLock<i32>> = Arc::new(RwLock::new(0));
+//     let c_lock: Arc<RwLock<i32>> = Arc::clone(&lock);
+
+//     let _ = thread::spawn(move || {
+//         let _lock: std::sync::RwLockWriteGuard<'_, i32> = c_lock.write().unwrap();
+//         panic!(); // the lock gets poisoned
+//     })
+//     .join();
+//     println!("{}", lock.is_poisoned());
+// }
+
+
+use std::sync::mpsc::{Sender, Receiver};
+use std::sync::mpsc;
+use std::thread;
+
+static N_THREADS: i32 = 3;
 
 fn main() {
-    let mut set = BTreeSet::new();
-    
-    // Inserting elements
-    set.insert(10);
-    set.insert(20);
-    set.insert(30);
-    set.insert(5);
-    
-    // Attempting to insert a duplicate
-    let duplicate_insertion: bool = set.insert(10); // Will return false since 10 already exists
-    print!("{duplicate_insertion}");
-    // Removing an element
-    set.remove(&20);
-    
-    // Checking for membership
-    if set.contains(&10) {
-        println!("Set contains 10");
-    } else {
-        println!("Set does not contain 10");
-    }
-    
-    // Iterating over the set
-    for element in &set {
-        println!("{}", element);
-    }
-}
+    // Channels have two endpoints: the `Sender<T>` and the `Receiver<T>`,
+    // where `T` is the type of the message to be transferred
+    // (type annotation is superfluous)
+    let (tx, rx): (Sender<i32>, Receiver<i32>) = mpsc::channel();
+    let mut children: Vec<thread::JoinHandle<()>> = Vec::new();
 
+    for id in 0..N_THREADS {
+        // The sender endpoint can be copied
+        let thread_tx: Sender<i32> = tx.clone();
+
+        // Each thread will send its id via the channel
+        let child: thread::JoinHandle<()> = thread::spawn(move || {
+            // The thread takes ownership over `thread_tx`
+            // Each thread queues a message in the channel
+            thread_tx.send(id).unwrap();
+
+            // Sending is a non-blocking operation, the thread will continue
+            // immediately after sending its message
+            println!("thread {} finished", id);
+        });
+
+        children.push(child);
+    }
+
+    // Here, all the messages are collected
+    let mut ids: Vec<Result<i32, mpsc::RecvError>> = Vec::with_capacity(N_THREADS as usize);
+    for _ in 0..N_THREADS {
+        // The `recv` method picks a message from the channel
+        // `recv` will block the current thread if there are no messages available
+        ids.push(rx.recv());
+    }
+    
+    // Wait for the threads to complete any remaining work
+    for child in children {
+        child.join().expect("oops! the child thread panicked");
+    }
+
+    // Show the order in which the messages were sent
+    println!("{:?}", ids);
+}
