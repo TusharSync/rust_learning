@@ -4620,23 +4620,458 @@
 //     println!("{:?}", ids);
 // }
 
-impl Solution {
-    pub fn merge_alternately(word1: String, word2: String) -> String {
-        let mut combination_word: String = String::new();
+// impl Solution {
+//     pub fn merge_alternately(word1: String, word2: String) -> String {
+//         let mut combination_word: String = String::new();
 
-        // Determine the maximum length of the words
-        let len_1: usize = word1.len();
-        let len_2: usize = word2.len();
-        let max_len: usize = len_1.max(len_2);
+//         // Determine the maximum length of the words
+//         let len_1: usize = word1.len();
+//         let len_2: usize = word2.len();
+//         let max_len: usize = len_1.max(len_2);
 
-        for i in 0..max_len {
-            if i < len_1 {
-                combination_word.push(word1.chars().nth(i).unwrap());
-            }
-            if i < len_2 {
-                combination_word.push(word2.chars().nth(i).unwrap());
-            }
-        }
-        return combination_word;
+//         for i in 0..max_len {
+//             if i < len_1 {
+//                 combination_word.push(word1.chars().nth(i).unwrap());
+//             }
+//             if i < len_2 {
+//                 combination_word.push(word2.chars().nth(i).unwrap());
+//             }
+//         }
+//         return combination_word;
+//     }
+// }
+
+// use std::{thread, time::Duration};
+
+// fn main() {
+
+//     let v: Vec<i8> = vec![1,2,3,4,5];
+//     let handle: thread::JoinHandle<()> =thread::spawn(move || {
+//         print!("{:?}",v);
+//     });
+
+//     handle.join().unwrap();
+
+//     for i in 0..5 {
+//         print!("from main thread---------{}\n", i);
+//         thread::sleep(Duration::from_millis(1));
+//     }
+// }
+
+// fn main(){
+//     let add = |<T>(x: T)| {
+//         print!("this is a test: {}", x);
+//     };
+//     add(10);
+//     add(true);
+
+// }
+
+// fn main() {
+//     // Define a generic function that returns a closure
+//     fn create_add_closure<T: std::fmt::Display>() -> impl Fn(T) {
+//         move |x: T| {
+//             print!("this is a test: {}", x);
+//         }
+//     }
+
+//     // Create closures with different types
+//     let add_int = create_add_closure::<i32>();
+//     add_int(10);
+
+//     let add_bool = create_add_closure::<bool>();
+//     add_bool(true);
+// }
+
+// fn apply_function<T, F>(value: T, func: F) -> T
+// where
+//     F: Fn(T) -> T,
+// {
+//     func(value)
+// }
+
+// fn main() {
+//     // A closure that doubles an integer
+//     let double = |x: i32| x * 2;
+
+//     // A closure that appends a string
+//     let append_hello = |s: String| format!("{} Hello!", s);
+
+//     // Applying the doubling function
+//     let number: i32 = 5;
+//     let doubled: i32 = apply_function(number, double);
+//     println!("Doubled: {}", doubled); // Output: Doubled: 10
+
+//     // Applying the string appending function
+//     let greeting: String = String::from("Goodbye");
+//     let new_greeting: String = apply_function(greeting, append_hello);
+//     println!("{}", new_greeting); // Output: Goodbye Hello!
+// }
+
+// fn consume<F>(func: F)
+// where
+//     F: FnOnce() -> String,
+// {
+//     // Call the closure and print the result
+//     let result = func();
+//     println!("{}", result);
+// }
+
+// fn main() {
+//     let name = String::from("Alice");
+
+//     // A closure that takes ownership of the captured variable `name`
+//     let greet = move || {
+//         format!("Hello, {}!", name)
+//     };
+
+//     // Pass the closure to the `consume` function
+//     consume(greet);
+
+//     // Uncommenting the following line would result in a compilation error
+//     // println!("Name is still: {}", name); // `name` has been moved
+// }
+
+// #![allow(unused)]
+// fn main() {
+//     fn consume_with_relish<F>(func: F)
+//         where F: FnOnce() -> String
+//     {
+//         println!("Consumed: {}", func());
+//         println!("Delicious!");
+//     }
+
+//     let x: String = String::from("x");
+//     let consume_and_return_x = move || x;
+//     consume_with_relish(consume_and_return_x);
+
+//     // `consume_and_return_x` can no longer be invoked at this point
+// }
+
+// #![allow(unused)]
+// fn main() {
+//     fn do_twice<F>(mut func: F)
+//     where
+//         F: Fn(1),
+//     {
+//         func(1);
+//         // func(1);
+//         // func(1);
+//         // func(1);
+//         // func(1);
+//         // func(1);
+//         // func(1);
+//     }
+
+//     let mut x: usize = 1;
+
+//     let add_two_to_x = |t| x += t;
+//     do_twice(add_two_to_x);
+// }
+
+// use std::{thread, time::Duration};
+
+// fn main() {
+
+//     let v: Vec<i8> = vec![1,2,3,4,5];
+//     let handle: thread::JoinHandle<()> =thread::spawn(move || {
+//         print!("{:?} spawn thread----------\n",v);
+//     });
+
+//     handle.join().unwrap();
+
+//     for i in 0..5 {
+//         print!("from main thread---------{}\n", i);
+//         thread::sleep(Duration::from_millis(1));
+//     }
+// }
+
+// use std::{sync::mpsc, thread};
+
+// fn main() {
+//     let (trans, receiver) = mpsc::channel();
+//     let trans_2 = trans.clone();
+//     let trans_3 = trans_2.clone();
+
+//     thread::spawn(move || {
+//         let vector_messages: Vec<String> = vec![String::from("hi"),String::from("this"),String::from("is tushar"),String::from("you got"),String::from("my message"),String::from("ok bye")];
+
+//         for ele in vector_messages {
+//             trans.send(ele).unwrap();
+//             // thread::sleep(Duration::from_secs(1));
+//         }
+//     });
+
+//     thread::spawn(move || {
+//         let vector_messages: Vec<String> = vec![String::from("hissdsd"),String::from("thsdsdsdsis"),String::from("is tsdsdsdushar"),String::from("yousdsdsd got"),String::from("my messdsdsdsage"),String::from("ok sdsdsdsbye")];
+
+//         for ele in vector_messages {
+//             trans_2.send(ele).unwrap();
+//             // thread::sleep(Duration::from_secs(1));
+//         }
+//     });
+
+
+//     thread::spawn(move || {
+//         let vector_messages: Vec<String> = vec![String::from("hissdsd"),String::from("thsdsdsdsis"),String::from("is tsdsdsdushar"),String::from("yousdsdsd got"),String::from("my messdsdsdsage"),String::from("ok sdsdsdsbye")];
+
+//         for ele in vector_messages {
+//             trans_3.send(ele).unwrap();
+//             // thread::sleep(Duration::from_secs(1));
+//         }
+//     });
+
+
+//     for received in receiver{
+//         print!("{received}\n");
+//     }
+// }
+
+
+// fn increment(val: &mut i32) {
+//     *val += 1; // Dereferencing to modify the value
+// }
+
+
+// fn incrxement(val: &mut i32) {
+//     *val += 1; // Dereferencing to modify the value
+// }
+// fn incremsent(val: &mut i32) {
+//     *val += 1; // Dereferencing to modify the value
+// }
+// fn incremefnt(val: &mut i32) {
+//     *val += 1; // Dereferencing to modify the value
+// }
+// fn main() {
+//     let mut number = 5;
+//     increment(&mut number); // Mutable borrow of `number`
+//     incrxement(&mut number); // Mutable borrow of `number`
+//     incremsent(&mut number); // Mutable borrow of `number`
+//     incremefnt(&mut number); // Mutable borrow of `number`
+
+
+
+//     println!("The incremented number is: {}", number);
+// }
+
+
+// fn main() {
+//     let mut number: i32 = 5;
+    
+//     // Multiple immutable borrows are allowed
+//     let r1: &i32 = &number;
+//     let r2: &i32 = &number;
+//     println!("r1: {}, r2: {}", r1, r2);
+
+//     // You cannot create a mutable reference while there are immutable references
+//     let r3: &mut i32 = &mut number; // This would cause a compile-time error
+//     *r3+=1;
+//     *r3+=1;
+//     *r3+=1;
+//     *r3+=1;
+//     *r3+=1;
+//     *r3+=1;
+//     *r3+=1;
+//     *r3+=1;
+//     *r3+=1;
+//     *r3+=1;
+//     *r3+=1;
+//     *r3+=1;
+//     *r3+=1;
+
+//     // Dropping the immutable references
+//     println!("Original number is: {}", number);
+
+//     // Now we can have a mutable reference
+//     let r4: &mut i32 = &mut number;
+//     *r4 += 1;
+//     *r4 += 1;
+//     *r4 += 1;
+//     *r4 += 1;
+//     *r4 += 1;
+//     *r4 += 1;
+//     *r4 += 1;
+
+//     println!("Updated number is: {}", number);
+// }
+
+
+// fn main() {
+//     let mut number: i32 = 5;
+    
+//     // Multiple immutable borrows are allowed
+//     let r1: &mut i32 = &mut number;
+//     println!("r1: {}", r1);
+//     // This would attempt to print `r1` and `r2` while having a mutable reference `r3`
+//     println!("Original number is: {}", r1); // Error: cannot borrow `number` as mutable because it is also borrowed as immutable
+// }
+
+
+// struct Book<'a> {
+//     title: &'a str,
+//     author: &'a str,
+// }
+
+// fn print_book_info(book: &Book) {
+//     println!("Book: '{}' by {}", book.title, book.author);
+// }
+
+// fn main() {
+//     let my_book: Book<'_> = Book {
+//         title: "The Rust Book",
+//         author: "John Doe",
+//     };
+//     print_book_info(&my_book); // Borrowing the entire struct
+// }
+
+
+
+// struct Book<'a>  {
+//     title:&'a str,
+//     author: &'a str,
+// }
+
+// fn print_book_info(book: &Book) {
+//     println!("Book: '{}' by {}", book.title, book.author);
+// }
+
+// fn main() {
+//     let my_book: Book = Book {
+//         title: "The Rust Bddddddddddddddddddddddddook",
+//         author: "John Doe",
+//     };
+//     print_book_info(&my_book); // Borrowing the entire struct
+// }
+
+
+
+// fn longest_with_announcement<'a, 'b>(x: &'a str, y: &'b str, announcement: &str) -> &'b str
+// where
+//     'a: 'b, // This means that 'a must outlive 'b
+// {
+//     println!("Attention please: {}", announcement);
+//     if x.len() > y.len() {
+//         x // Since 'a outlives 'b, this is safe
+//     } else {
+//         y
+//     }
+// }
+
+// fn main() {
+//     let string1: String = String::from("Hello");
+//     let string2: String = String::from("World34343434!");
+//     let result: &str;
+
+//     {
+//         let announcement: String = String::from("Comparing strings...");
+//         result = longest_with_announcement(&string1, &string2, &announcement);
+//     }
+
+//     // The lifetimes of `string1` and `string2` are valid here, but `announcement` is out of scope.
+//     println!("The longest string is: {}", result);
+// }
+
+
+
+// struct Pair<'a, 'b> {
+//     first: &'a str,
+//     second: &'b str,
+// }
+
+// impl<'a, 'b> Pair<'a, 'b> {
+//     fn get_longer(&self) -> &str {
+//         if self.first.len() > self.second.len() {
+//             self.first
+//         } else {
+//             self.second
+//         }
+//     }
+
+//     fn announce(&self, msg: &str) {
+//         println!("Announcement: {}", msg);
+//         println!("First: {}, Second: {}", self.first, self.second);
+//     }
+// }
+
+// fn main() {
+//     let string1: String = String::from("This is the first string");
+//     let string2: String = String::from("Second");
+//     let pair: Pair<'_, '_> = Pair {
+//         first: &string1,
+//         second: &string2,
+//     };
+
+//     let longer: &str = pair.get_longer();
+//     println!("The longer string is: {}", longer);
+
+//     pair.announce("Checking the pair of strings...");
+// }
+
+
+// struct Inner<'a> {
+//     name: &'a str,
+// }
+
+// struct Outer<'a, 'b> {
+//     inner: &'a Inner<'b>,
+//     description: &'a str,
+// }
+
+// impl<'a, 'b> Outer<'a, 'b> {
+//     fn print_info(&self) {
+//         println!("Inner name: {}", self.inner.name);
+//         println!("Description: {}", self.description);
+//     }
+
+//     fn get_name(&self) -> &str {
+//         self.inner.name
+//     }
+// }
+
+// fn main() {
+//     let name_string: String = String::from("Rust Lifetime Example");
+//     let description_string: String = String::from("Nested Structs Example");
+
+//     let inner: Inner<'_> = Inner {
+//         name: &name_string,
+//     };
+
+//     let outer: Outer<'_, '_> = Outer {
+//         inner: &inner,
+//         description: &description_string,
+//     };
+
+//     outer.print_info();
+//     println!("Inner name through outer: {}", outer.get_name());
+// }
+
+struct Library<'a> {
+    books: Vec<&'a str>,
+}
+
+impl<'a> Library<'a> {
+    fn new() -> Self {
+        Library { books: Vec::new() }
+    }
+
+    fn add_book(&mut self, book: &'a str) {
+        self.books.push(book);
+    }
+
+    fn get_book<'b>(&'b self, index: usize) -> Option<&'b str> {
+        self.books.get(index).copied()
+    }
+}
+
+fn main() {
+    let book1: String = String::from("The Rust Programming Language");
+    let book2: String = String::from("Rust by Example");
+
+    let mut library: Library<'_> = Library::new();
+    library.add_book(&book1);
+    library.add_book(&book2);
+
+    if let Some(book) = library.get_book(0) {
+        println!("First book: {}", book);
     }
 }
