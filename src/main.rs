@@ -4811,7 +4811,6 @@
 //         }
 //     });
 
-
 //     thread::spawn(move || {
 //         let vector_messages: Vec<String> = vec![String::from("hissdsd"),String::from("thsdsdsdsis"),String::from("is tsdsdsdushar"),String::from("yousdsdsd got"),String::from("my messdsdsdsage"),String::from("ok sdsdsdsbye")];
 
@@ -4821,17 +4820,14 @@
 //         }
 //     });
 
-
 //     for received in receiver{
 //         print!("{received}\n");
 //     }
 // }
 
-
 // fn increment(val: &mut i32) {
 //     *val += 1; // Dereferencing to modify the value
 // }
-
 
 // fn incrxement(val: &mut i32) {
 //     *val += 1; // Dereferencing to modify the value
@@ -4849,15 +4845,12 @@
 //     incremsent(&mut number); // Mutable borrow of `number`
 //     incremefnt(&mut number); // Mutable borrow of `number`
 
-
-
 //     println!("The incremented number is: {}", number);
 // }
 
-
 // fn main() {
 //     let mut number: i32 = 5;
-    
+
 //     // Multiple immutable borrows are allowed
 //     let r1: &i32 = &number;
 //     let r2: &i32 = &number;
@@ -4895,17 +4888,15 @@
 //     println!("Updated number is: {}", number);
 // }
 
-
 // fn main() {
 //     let mut number: i32 = 5;
-    
+
 //     // Multiple immutable borrows are allowed
 //     let r1: &mut i32 = &mut number;
 //     println!("r1: {}", r1);
 //     // This would attempt to print `r1` and `r2` while having a mutable reference `r3`
 //     println!("Original number is: {}", r1); // Error: cannot borrow `number` as mutable because it is also borrowed as immutable
 // }
-
 
 // struct Book<'a> {
 //     title: &'a str,
@@ -4924,8 +4915,6 @@
 //     print_book_info(&my_book); // Borrowing the entire struct
 // }
 
-
-
 // struct Book<'a>  {
 //     title:&'a str,
 //     author: &'a str,
@@ -4942,8 +4931,6 @@
 //     };
 //     print_book_info(&my_book); // Borrowing the entire struct
 // }
-
-
 
 // fn longest_with_announcement<'a, 'b>(x: &'a str, y: &'b str, announcement: &str) -> &'b str
 // where
@@ -4970,8 +4957,6 @@
 //     // The lifetimes of `string1` and `string2` are valid here, but `announcement` is out of scope.
 //     println!("The longest string is: {}", result);
 // }
-
-
 
 // struct Pair<'a, 'b> {
 //     first: &'a str,
@@ -5006,7 +4991,6 @@
 
 //     pair.announce("Checking the pair of strings...");
 // }
-
 
 // struct Inner<'a> {
 //     name: &'a str,
@@ -5045,33 +5029,340 @@
 //     println!("Inner name through outer: {}", outer.get_name());
 // }
 
-struct Library<'a> {
-    books: Vec<&'a str>,
+// struct Library<'a> {
+//     books: Vec<&'a str>,
+// }
+
+// impl<'a> Library<'a> {
+//     fn new() -> Self {
+//         Library { books: Vec::new() }
+//     }
+
+//     fn add_book(&mut self, book: &'a str) {
+//         self.books.push(book);
+//     }
+
+//     fn get_book<'b>(&'b self, index: usize) -> Option<&'b str> {
+//         self.books.get(index).copied()
+//     }
+// }
+
+// fn main() {
+//     let book1: String = String::from("The Rust Programming Language");
+//     let book2: String = String::from("Rust by Example");
+
+//     let mut library: Library<'_> = Library::new();
+//     library.add_book(&book1);
+//     library.add_book(&book2);
+
+//     if let Some(book) = library.get_book(0) {
+//         println!("First book: {}", book);
+//     }
+// }
+
+// use std::time::Duration;
+// use std::sync::Arc;
+// use std::thread;
+
+// fn main() {
+//     // This variable declaration is where its value is specified.
+//     let apple: Arc<&str> = Arc::new("the same apple");
+
+//     for _ in 0..10 {
+//         // Here there is no value specification as it is a pointer to a
+//         // reference in the memory heap.
+//         let apple_1: Arc<&str> = Arc::clone(&apple);
+//         let apple_2: Arc<&str> = Arc::clone(&apple);
+//         thread::spawn(move || {
+//             // As Arc was used, threads can be spawned using the value allocated
+//             // in the Arc variable pointer's location.
+//             println!("{:?}spawn-11111111", apple_1);
+//         });
+
+//         thread::spawn(move || {
+//             // As Arc was used, threads can be spawned using the value allocated
+//             // in the Arc variable pointer's location.
+//             println!("{:?}spawn-22222222", apple_2);
+//         });
+//     }
+
+//     print!("{}-------------000000000000000000000000000000000000000000000000000000000000",Arc::strong_count(&apple));
+//     // Make sure all Arc instances are printed from spawned threads.
+//     thread::sleep(Duration::from_secs(1));
+// }
+
+// #![allow(unused)]
+// fn main() {
+//     use std::sync::atomic::{AtomicU16, AtomicU8, Ordering,AtomicI16};
+//     use std::mem::transmute;
+//     use std::thread;
+
+//     let atomic: AtomicU16 = AtomicU16::new(0);
+
+//     thread::scope(|s: &thread::Scope<'_, '_>| {
+//         // This is UB: mixing atomic and non-atomic accesses
+//         s.spawn(|| atomic.store(1, Ordering::Relaxed));
+//         s.spawn(|| unsafe { atomic.as_ptr().write(2) });
+//     });
+
+//     thread::scope(|s: &thread::Scope<'_, '_>| {
+//         // This is UB: even reads are not allowed to be mixed
+//         s.spawn(|| atomic.load(Ordering::Relaxed));
+//         s.spawn(|| unsafe { atomic.as_ptr().read() });
+//     });
+
+//     thread::scope(|s: &thread::Scope<'_, '_>| {
+//         // This is fine, `join` synchronizes the code in a way such that atomic
+//         // and non-atomic accesses can't happen "at the same time"
+//         let handle = s.spawn(|| atomic.store(1, Ordering::Relaxed));
+//         handle.join().unwrap();
+//         s.spawn(|| unsafe { atomic.as_ptr().write(2) });
+//     });
+
+//     thread::scope(|s: &thread::Scope<'_, '_>| {
+//         // This is UB: using different-sized atomic accesses to the same data
+//         s.spawn(|| atomic.store(1, Ordering::Relaxed));
+//         s.spawn(|| unsafe {
+//             let differently_sized = transmute::<&AtomicU16, &AtomicU8>(&atomic);
+//             differently_sized.store(2, Ordering::Relaxed);
+//         });
+//     });
+
+//     thread::scope(|s: &thread::Scope<'_, '_>| {
+//         // This is fine, `join` synchronizes the code in a way such that
+//         // differently-sized accesses can't happen "at the same time"
+//         let handle = s.spawn(|| atomic.store(1, Ordering::Relaxed));
+//         handle.join().unwrap();
+//         s.spawn(|| unsafe {
+//             let differently_sized = transmute::<&AtomicU16, &AtomicU8>(&atomic);
+//             differently_sized.store(2, Ordering::Relaxed);
+//         });
+//     });
+// }
+
+// use std::thread::spawn;
+// use std::{cell::UnsafeCell, sync::atomic::AtomicBool};
+// use std::sync::atomic::Ordering;
+// const LOCKED: bool = true;
+// const UNLOCKED: bool = false;
+
+// #[derive(Debug)]
+// pub struct Mutex<T> {
+//     locked: AtomicBool,
+//     v: UnsafeCell<T>,
+// }
+
+// impl<T> Mutex<T> {
+//     pub fn new(t: T) -> Self {
+//         Self {
+//             locked: AtomicBool::new(UNLOCKED),
+//             v: UnsafeCell::new(t),
+//         }
+//     }
+//     pub fn with_lock<R>(&self,f: impl FnOnce(&mut T) -> R) -> R {
+//         while self.locked.load(Ordering::Relaxed)!=UNLOCKED {}
+//         self.locked.store(LOCKED,Ordering::Relaxed);
+//         let x: R = f(unsafe {
+//             &mut *self.v.get()
+//         });
+//         self.locked.store(UNLOCKED,Ordering::Relaxed);
+//         x
+//     }
+// }
+// fn main() {
+//     let leakage:&'static _= Box::leak(Box::new(Mutex::new(1)));
+//     for _ in 0..10{
+//         spawn(move ||{
+//             for _ in 0..100{
+//                 leakage.with_lock(|v|{
+//                     v+=1;
+//                 });
+
+//             }
+//         });
+//     }
+//     print!("hello {:?}",leakage.locked)
+// }
+
+// use std::{thread, time::Duration};
+
+// fn main() {
+//     thread::spawn(f);
+//     thread::spawn(f);
+
+//     println!("Hello from the -------------main---------------- thread.");
+
+//     thread::sleep(Duration::from_secs(1));
+// }
+
+// fn f() {
+//     let id: thread::ThreadId = thread::current().id();
+//     println!("Hello from another thread! ---id---{id:?}");
+// }
+
+// use std::thread;
+
+// fn main() {
+//     let t1: thread::JoinHandle<_> = thread::spawn(f);
+//     let t2: thread::JoinHandle<_> = thread::spawn(f);
+//     println!("Hello from the main thread.");
+//     t1.join().unwrap();
+//     t2.join().unwrap();
+
+//     let numbers: Vec<i32> = vec![1, 2, 3];
+
+//     thread::spawn(move || {
+//         for n in numbers.clone() {
+//             println!("{n}");
+//         }
+//     })
+//     .join()
+//     .unwrap();
+// }
+
+
+// mod my {
+//     // A public struct with a public field of generic type `T`
+//     pub struct OpenBox<T> {
+//         pub contents: T,
+//     }
+
+//     // A public struct with a private field of generic type `T`
+//     #[allow(dead_code)]
+//     pub struct ClosedBox<T> {
+//         contents: T,
+//     }
+
+//     impl<T> ClosedBox<T> {
+//         // A public constructor method
+//         pub fn new(contents: T) -> ClosedBox<T> {
+//             ClosedBox {
+//                 contents: contents,
+//             }
+//         }
+//     }
+// }
+
+// fn main() {
+//     // Public structs with public fields can be constructed as usual
+//     let open_box: my::OpenBox<&str> = my::OpenBox { contents: "public information" };
+
+//     // and their fields can be normally accessed.
+//     println!("The open box contains: {}", open_box.contents);
+
+//     // Public structs with private fields cannot be constructed using field names.
+//     // Error! `ClosedBox` has private fields
+//     //let closed_box = my::ClosedBox { contents: "classified information" };
+//     // TODO ^ Try uncommenting this line
+
+//     // However, structs with private fields can be created using
+//     // public constructors
+//     let _closed_box: my::ClosedBox<&str> = my::ClosedBox::new("classified information");
+
+//     // and the private fields of a public struct cannot be accessed.
+//     // Error! The `contents` field is private
+//     //println!("The closed box contains: {}", _closed_box.contents);
+//     // TODO ^ Try uncommenting this line
+// }
+
+
+// fn function() {
+//     println!("called `function()`");
+// }
+
+// mod deeply {
+//     pub mod nested {
+//         pub fn function() {
+//             println!("called `deeply::nested::function()`");
+//         }
+//     }
+// }
+// // Bind the `deeply::nested::function` path to `other_function`.
+// use deeply::nested::function as other_function;
+
+// fn main() {
+//     // Easier access to `deeply::nested::function`
+//     other_function();
+    
+//     println!("Entering block");
+//     {
+//         // This is equivalent to `use deeply::nested::function as function`.
+//         // This `function()` will shadow the outer one.
+//         use crate::deeply::nested::function;
+
+//         // `use` bindings have a local scope. In this case, the
+//         // shadowing of `function()` is only in this block.
+//         function();
+//         println!("Leaving block");
+//     }
+
+//     function();
+// }
+
+// fn function() {
+//     println!("called `function()`");
+// }
+
+// mod cool {
+//     pub fn function() {
+//         println!("called `cool::function()`");
+//     }
+// }
+
+// mod my {
+//     pub fn function() {
+//         println!("called `my::function()`");
+//     }
+    
+//     pub mod cool {
+//         pub fn function() {
+//             println!("called `my::cool::function()`");
+//         }
+//     }
+    
+//     pub fn indirect_call() {
+//         // Let's access all the functions named `function` from this scope!
+//         print!("called `my::indirect_call()`, that\n> ");
+//         self::function();
+//         function();
+        
+//         // We can also use `self` to access another module inside `my`:
+//         self::cool::function();
+        
+//         // The `super` keyword refers to the parent scope (outside the `my` module).
+//         super::function();
+        
+//         // This will bind to the `cool::function` in the *crate* scope.
+//         // In this case the crate scope is the outermost scope.
+//         {
+//             use crate::cool::function as root_function;
+//             root_function();
+//         }
+//     }
+// }
+
+// fn main() {
+//     my::cool::function();
+//     my::indirect_call()
+// }
+
+use futures::executor::block_on;
+
+async fn add(a: u8, b: u8) -> u8 {
+     printing(a,b);
+    // print!("xxxxxxx-------{result}-------xxxxxxx\n");
+    a + b
 }
 
-impl<'a> Library<'a> {
-    fn new() -> Self {
-        Library { books: Vec::new() }
-    }
 
-    fn add_book(&mut self, book: &'a str) {
-        self.books.push(book);
-    }
-
-    fn get_book<'b>(&'b self, index: usize) -> Option<&'b str> {
-        self.books.get(index).copied()
-    }
+async fn printing(a: u8, b: u8) -> u8 {
+    a + b
 }
-
 fn main() {
-    let book1: String = String::from("The Rust Programming Language");
-    let book2: String = String::from("Rust by Example");
-
-    let mut library: Library<'_> = Library::new();
-    library.add_book(&book1);
-    library.add_book(&book2);
-
-    if let Some(book) = library.get_book(0) {
-        println!("First book: {}", book);
-    }
+    let a: u8 = 10;
+    let b: u8 = 20;
+    let result: u8 = block_on(add(a, b));
+    println!("{result}"); 
 }
+
+
