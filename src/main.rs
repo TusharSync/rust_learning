@@ -5220,7 +5220,6 @@
 //     .unwrap();
 // }
 
-
 // mod my {
 //     // A public struct with a public field of generic type `T`
 //     pub struct OpenBox<T> {
@@ -5265,7 +5264,6 @@
 //     // TODO ^ Try uncommenting this line
 // }
 
-
 // fn function() {
 //     println!("called `function()`");
 // }
@@ -5283,7 +5281,7 @@
 // fn main() {
 //     // Easier access to `deeply::nested::function`
 //     other_function();
-    
+
 //     println!("Entering block");
 //     {
 //         // This is equivalent to `use deeply::nested::function as function`.
@@ -5313,25 +5311,25 @@
 //     pub fn function() {
 //         println!("called `my::function()`");
 //     }
-    
+
 //     pub mod cool {
 //         pub fn function() {
 //             println!("called `my::cool::function()`");
 //         }
 //     }
-    
+
 //     pub fn indirect_call() {
 //         // Let's access all the functions named `function` from this scope!
 //         print!("called `my::indirect_call()`, that\n> ");
 //         self::function();
 //         function();
-        
+
 //         // We can also use `self` to access another module inside `my`:
 //         self::cool::function();
-        
+
 //         // The `super` keyword refers to the parent scope (outside the `my` module).
 //         super::function();
-        
+
 //         // This will bind to the `cool::function` in the *crate* scope.
 //         // In this case the crate scope is the outermost scope.
 //         {
@@ -5346,23 +5344,158 @@
 //     my::indirect_call()
 // }
 
-use futures::executor::block_on;
+// use futures::executor::block_on;
 
-async fn add(a: u8, b: u8) -> u8 {
-     printing(a,b);
-    // print!("xxxxxxx-------{result}-------xxxxxxx\n");
-    a + b
-}
+// // async fn add(a: u8, b: u8) -> u8 {
+// //      printing(a,b);
+// //     // print!("xxxxxxx-------{result}-------xxxxxxx\n");
+// //     a + b
+// // }
+
+// // async fn printing(a: u8, b: u8) -> u8 {
+// //     a + b
+// // }
+// fn main() {
+//     // let a: u8 = 10;
+//     // let b: u8 = 20;
+//     // let result: u8 = block_on(add(a, b));
+//     // println!("{result}");
+//     println!("this is tushar and i want to try the things very quicklyr\n");
+//     eprint!("this is a great things\n");
+//     print!("hi\n");
+// }
+
+// use std::io;
+
+// fn main() {
+//     let mut buff: String = String::new();
+
+//     println!("Welcome to guessing game!");
+//     let min_bottom: i32;
+//     loop{
+//         // println!("Enter bottom border: ");
+//         print!("Enter bottom border: ");
+
+//         match io::stdin().read_line(&mut buff) {
+//             Ok(_) => {}
+//             Err(_) => {
+//                 println!("Failed to read string");
+//                 continue;
+//             }
+//         }
+//         match buff.trim().parse() {
+//             Ok(val) => {
+//                 min_bottom = val;
+//                 break;
+//             }
+//             Err(_) => {
+//                 println!("Incorrect string!");
+//                 continue;
+//             }
+//         }
+//     }
+//     println!("{min_bottom}")
+// }
+
+// use std::fs::File;
+// use std::io::Read;
+
+// fn main() {
+//     let filename: &str = "example.txt";
+
+//     let mut file: File = match File::open(filename) {
+//         Ok(file) => file,
+//         Err(_) => {
+//             // Print the error message to stderr
+//             eprint!("Error: Could not open the file '{}'", filename);
+//             return; // Exit the function early
+//         }
+//     };
+
+//     let mut contents: String = String::new();
+//     if let Err(_) = file.read_to_string(&mut contents) {
+//         // Print a different error message to stderr if reading fails
+//         eprint!(
+//             "Error: Could not read the contents of the file '{}'",
+//             filename
+//         );
+//         return;
+//     }
+
+//     // Print the contents to stdout
+//     println!("File contents:\n{}", contents);
+// }
+
+// fn main() {
+//     let numbers: Vec<i32> = vec![1, 2, 3, 4, 5];
+
+//     // Using an iterator with a for loop
+//     // for num in numbers.iter() {
+//     //     println!("{}", num);
+//     // }
+
+//     for &num in numbers.iter() {
+//         let mut x: i32 = num;
+//         x +=1;
+//         println!("{}", num);
+//         println!("{x}");
+//     }
+
+//     // Using an iterator with methods like `map` and `filter`
+//     let squared_numbers: Vec<i32> = numbers.iter().map(|&x| x * x).collect();
+//     println!("Squared numbers: {:?}", squared_numbers);
+// }
+
+// #![allow(unused)]
+// fn main() {
+// // Foo introduces a type in the type namespace and a constructor in the value
+// // namespace.
+// struct Foo(u32);
+
+// // The `Foo` macro is declared in the macro namespace.
+// macro_rules! Foo {
+//     () => {};
+// }
+
+// // `Foo` in the `f` parameter type refers to `Foo` in the type namespace.
+// // `'Foo` introduces a new lifetime in the lifetime namespace.
+// fn exampled<'foo>(f: Foo) {
+//     // `Foo` refers to the `Foo` constructor in the value namespace.
+//     let ctor: fn(u32) -> Foo = Foo;
+//     // `Foo` refers to the `Foo` macro in the macro namespace.
+//     Foo!{}
+//     // `'Foo` introduces a label in the label namespace.
+//     'Foo: loop {
+//         // `'Foo` refers to the `'Foo` lifetime parameter, and `Foo`
+//         // refers to the type namespace.
+//         let x: &'foo Foo;
+//         // `'Foo` refers to the label.
+//         break 'Foo;
+//     }
+// }
+// }
 
 
-async fn printing(a: u8, b: u8) -> u8 {
-    a + b
-}
+#![allow(unused)]
 fn main() {
-    let a: u8 = 10;
-    let b: u8 = 20;
-    let result: u8 = block_on(add(a, b));
-    println!("{result}"); 
+    use std::fmt;
+    // Self type within struct definition.
+    struct Recursive {
+        f1: Option<Box<Self>>,
+    }
+
+    // Self type within generic parameters.
+    struct SelfGeneric<T: Into<Self>>(T);
+
+    struct ImplExample{
+        t:i32
+    };
+
+    impl fmt::Display for ImplExample {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "{}", self)
+        }
+    }
+    let x: ImplExample = ImplExample {t:10};
+    println!("{}", x);
 }
-
-

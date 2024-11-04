@@ -13,7 +13,10 @@ name = "first_project"
 version = "0.1.0"
 dependencies = [
  "futures",
+ "proc-macro2",
+ "quote",
  "rpassword",
+ "syn",
 ]
 
 [[package]]
