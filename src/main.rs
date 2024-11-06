@@ -5475,27 +5475,345 @@
 // }
 // }
 
+// #![allow(unused)]
+// fn main() {
+//     use std::fmt;
+//     // Self type within struct definition.
+//     struct Recursive {
+//         f1: Option<Box<Self>>,
+//     }
+
+//     // Self type within generic parameters.
+//     struct SelfGeneric<T: Into<Self>>(T);
+
+//     struct ImplExample{
+//         t:i32
+//     };
+
+//     impl fmt::Display for ImplExample {
+//         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+//             write!(f, "{}", self)
+//         }
+//     }
+//     let x: ImplExample = ImplExample {t:10};
+//     println!("{}", x);
+// }
+
+// use std::ops::{Add, Mul, Sub};
+
+// macro_rules! assert_equal_len {
+//     // The `tt` (token tree) designator is used for
+//     // operators and tokens.
+//     ($a:expr, $b:expr, $func:ident, $op:tt) => {
+//         assert!($a.len() == $b.len(),
+//                 "{:?}: dimension mismatch: {:?} {:?} {:?}",
+//                 stringify!($func),
+//                 ($a.len(),),
+//                 stringify!($op),
+//                 ($b.len(),));
+//     };
+// }
+
+// macro_rules! op {
+//     ($func:ident, $bound:ident, $op:tt, $method:ident) => {
+//         fn $func<T: $bound<T, Output=T> + Copy>(xs: &mut Vec<T>, ys: &Vec<T>) {
+//             assert_equal_len!(xs, ys, $func, $op);
+
+//             for (x, y) in xs.iter_mut().zip(ys.iter()) {
+//                 *x = $bound::$method(*x, *y);
+//                 // *x = x.$method(*y);
+//             }
+//         }
+//     };
+// }
+
+// // Implement `add_assign`, `mul_assign`, and `sub_assign` functions.
+// op!(add_assign, Add, +=, add);
+// op!(mul_assign, Mul, *=, mul);
+// op!(sub_assign, Sub, -=, sub);
+
+// mod test {
+//     use std::iter;
+//     macro_rules! test {
+//         ($func:ident, $x:expr, $y:expr, $z:expr) => {
+//             #[test]
+//             fn $func() {
+//                 for size in 0usize..10 {
+//                     let mut x: Vec<_> = iter::repeat($x).take(size).collect();
+//                     let y: Vec<_> = iter::repeat($y).take(size).collect();
+//                     let z: Vec<_> = iter::repeat($z).take(size).collect();
+
+//                     super::$func(&mut x, &y);
+
+//                     assert_eq!(x, z);
+//                 }
+//             }
+//         };
+//     }
+
+//     // Test `add_assign`, `mul_assign`, and `sub_assign`.
+//     test!(add_assign, 1u32, 2u32, 3u32);
+//     test!(mul_assign, 2u32, 3u32, 6u32);
+//     test!(sub_assign, 3u32, 2u32, 1u32);
+// }
+
+// fn main(){
+//     add_assign(xs, ys);
+// }
+
+// macro_rules! calculate {
+//     (eval $e:expr) => {
+//         {
+//             let val: usize = $e; // Force types to be unsigned integers
+//             println!("{} = {}", stringify!{$e}, val);
+//         }
+//     };
+// }
+
+// fn main() {
+//     calculate! {
+//         eval 1 + 2 // hehehe `eval` is _not_ a Rust keyword!
+//     }
+
+//     calculate! {
+//         eval (1 + 2) * (3 / 4)
+//     }
+// }
+
+// macro_rules! log {
+//     (info<==> $msg:expr) => {
+//         println!("[INFO]: {}", $msg);
+//     };
+//     (warn(^_^) $msg:expr) => {
+//         println!("[WARN]: {}", $msg);
+//     };
+//     (error**><** $msg:expr) => {
+//         eprintln!("[ERROR]: {}", $msg);
+//     };
+// }
+
+// fn main() {
+//     log!(info<==> "Application started");
+//     log!(warn(^_^) "Low disk space");
+//     log!(error**><** "Failed to connect to database");
+// }
+
+// #![allow(unused)]
+// #[derive(Default, Debug)]
+// struct User {
+//     name: String,
+//     email: Option<String>,
+//     age: Option<u32>,
+// }
+// macro_rules! create_user {
+//     ($name:expr, $($key:ident: $val:expr),*) => {
+//         User {
+//             name: $name.to_string(),
+//             $($key: Some($val)),*,
+//             ..Default::default()
+//         }
+//     };
+// }
+
+// // Usage
+// fn main() {
+//     let user: User = create_user!("Alice", email: "alice@example.com".to_string(), age: 30);
+//     println!("{:?}", user);
+// }
+
+// macro_rules! enum_to_string {
+//     ($name:ident { $($variant:ident),* }) => {
+//         enum $name {
+//             $($variant),*
+//         }
+
+//         impl $name {
+//             fn as_str(&self) -> &'static str {
+//                 match self {
+//                     $(Self::$variant => stringify!($variant)),*
+//                 }
+//             }
+//         }
+//     };
+// }
+
+// fn main() {
+//     #![allow(dead_code)]
+//     enum_to_string!(Status { Active, Inactive, Pending });
+//     let status: Status = Status::Active;
+//     println!("{}", status.as_str()); // Output: "Active"
+
+//     enum_to_string!(Banana { Black, GoldenBlue, Yellow });
+//     let banana: Banana = Banana::Black;
+//     print!("{}",banana.as_str());
+// }
+
+// macro_rules! json {
+//     ( { $( $key:expr : $val:expr ),* $(,)? } ) => {
+//         {
+//             let mut map = std::collections::HashMap::new();
+//             $(
+//                 map.insert($key.to_string(), $val.to_string());
+//             )*
+//             map
+//         }
+//     };
+// }
+
+// // Usage
+// fn main() {
+//     let data: std::collections::HashMap<String, String> = json!({
+//         "name": "Alice",
+//         "age": "30",
+//         "city": "Wonderland"
+//     });
+//     println!("{:?}", data);
+// }
+
+// macro_rules! json {
+//     ( { $( $key:expr => $val:expr ),* $(,)? } ) => {
+//         {
+//             let mut map = std::collections::HashMap::new();
+//             $(
+//                 map.insert($key.to_string(), $val.to_string());
+//             )*
+//             map
+//         }
+//     };
+// }
+
+// // Usage
+// fn main() {
+//     let data = json!({
+//         "name" => "Alice",
+//         "data"=>{
+//             "new"=>"hello",
+//         },
+//         "age" => "30",
+//         "city" => "Wonderland"
+//     });
+//     println!("{:?}", data);
+// }
+
+// use std::collections::HashMap;
+
+// macro_rules! json {
+//     // Handle objects (HashMap)
+//     ( { $( $key:expr => $val:tt ),* $(,)? } ) => {{
+//         let mut map = HashMap::new();
+//         $(
+//             map.insert($key.to_string(), json!($val));
+//         )*
+//         JsonValue::Object(map)
+//     }};
+
+//     // Handle arrays (Vec), allowing nested structures including other objects or arrays
+//     ( [ $( $elem:tt ),* $(,)? ] ) => {{
+//         let mut arr = Vec::new();
+//         $(
+//             arr.push(json!($elem));
+//         )*
+//         JsonValue::Array(arr)
+//     }};
+
+//     // Handle literals (String, Number, Boolean)
+//     ( $other:expr ) => {
+//         JsonValue::Literal($other.to_string())
+//     };
+// }
+
+// #[derive(Debug)]
+// // #![allow(unused)]
+// enum JsonValue {
+//     Object(HashMap<String, JsonValue>),
+//     Array(Vec<JsonValue>),
+//     Literal(String),
+// }
+
+// // Usage example
+// fn main() {
+//     let data: JsonValue = json!({
+//         "name" => "Alice",
+//         "age" => 30,
+//         "address" => {
+//             "city" => "Wonderland",
+//             "zip" => "12345"
+//         },
+//         "contacts" => [
+//             {
+//                 "type" => "email",
+//                 "value" => "alice@example.com"
+//             },
+//             {
+//                 "type" => "phone",
+//                 "value" => "123-456-7890",
+//                 "details" => { // Nested object within array
+//                     "country_code" => "+1",
+//                     "verified" => true
+//                 }
+//             }
+//         ],
+//         "is_active" => true
+//     });
+
+//     println!("{:#?}", data);
+// }
+
+// use std::any::Any;
+// use std::fs::File;
+// use std::io::ErrorKind;
+
+// fn main() {
+//     let greeting_file_result: Result<File, std::io::Error> = File::open("hello.txt");
+
+//     let greeting_file: File = match greeting_file_result {
+//         Ok(file) => file,
+//         Err(error) => match error.kind() {
+//             ErrorKind::NotFound => match File::create("hello.txt") {
+//                 Ok(fc) => fc,
+//                 Err(e) => panic!("Problem creating the file: {e:?}"),
+//             },
+//             other_error => {
+//                 panic!("Problem opening the file: {other_error:?}");
+//             }
+//         },
+//     };
+// }
+// #![allow(unused)]
+// fn main() {
+//     use std::fs::File;
+//     use std::io::{self, Read};
+
+//     fn read_username_from_file() -> Result<String, io::Error> {
+//         let username_file_result: Result<File, io::Error> = File::open("helxlo.txt");
+//         let mut username_file = match username_file_result {
+//             Ok(file) => file,
+//             Err(e) => return Err(e),
+//         };
+
+//         let mut username = String::new();
+
+//         match username_file.read_to_string(&mut username) {
+//             Ok(_) => Ok(username),
+//             Err(e) => Err(e),
+//         }
+//     }
+
+//     let _x: Result<String, io::Error> = read_username_from_file();
+//     println!("{:?}",_x)
+// }
 
 #![allow(unused)]
 fn main() {
-    use std::fmt;
-    // Self type within struct definition.
-    struct Recursive {
-        f1: Option<Box<Self>>,
+    use std::fs::File;
+    use std::io::{self, Read};
+
+    fn read_username_from_file() -> Result<String, io::Error> {
+        let mut username_file: File = File::open("hello.txt")?;
+        let mut username: String = String::new();
+        username_file.read_to_string(&mut username)?;
+        Ok(username)
     }
-
-    // Self type within generic parameters.
-    struct SelfGeneric<T: Into<Self>>(T);
-
-    struct ImplExample{
-        t:i32
-    };
-
-    impl fmt::Display for ImplExample {
-        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-            write!(f, "{}", self)
-        }
-    }
-    let x: ImplExample = ImplExample {t:10};
-    println!("{}", x);
+    let y: Result<String, io::Error> = read_username_from_file();
+    print!("{:?}",y)
 }
