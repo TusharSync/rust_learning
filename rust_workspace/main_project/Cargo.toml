@@ -2,6 +2,3 @@
 name = "main_project"
 version = "0.1.0"
 edition = "2021"
-
-[dependencies]
-struct_display_macro = { path = "../struct_display_macro" }

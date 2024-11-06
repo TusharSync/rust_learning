@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "*.ts": "typescript",
-        "*.jsx": "javascriptreact",
-        "stdlib.h": "c",
-        "pthread.h": "c"
-    }
-}
