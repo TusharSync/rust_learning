@@ -22,3 +22,32 @@
 //     free(buffer);
 //     return 0;
 // }
+#include <stdio.h>
+#include <time.h>
+
+int my_async_function()
+{
+    for (int i = 1; i < 1000000000; ++i)
+    { // Reduced to a smaller range to avoid too many iterations
+
+        printf("Doing something async... %d\n", i);
+    }
+    return 42;
+}
+
+int main()
+{
+    // Start measuring time
+    clock_t start = clock();
+
+    // Run the function synchronously
+    int result = my_async_function();
+    printf("Result: %d\n", result);
+
+    // Calculate elapsed time
+    clock_t end = clock();
+    double duration = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("Time taken: %.6f seconds\n", duration);
+
+    return 0;
+}

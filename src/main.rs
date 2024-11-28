@@ -5803,17 +5803,320 @@
 //     println!("{:?}",_x)
 // }
 
-#![allow(unused)]
-fn main() {
-    use std::fs::File;
-    use std::io::{self, Read};
+// #![allow(unused)]
+// fn main() {
+//     use std::fs::File;
+//     use std::io::{self, Read};
 
-    fn read_username_from_file() -> Result<String, io::Error> {
-        let mut username_file: File = File::open("hello.txt")?;
-        let mut username: String = String::new();
-        username_file.read_to_string(&mut username)?;
-        Ok(username)
-    }
-    let y: Result<String, io::Error> = read_username_from_file();
-    print!("{:?}",y)
+//     fn read_username_from_file() -> Result<String, io::Error> {
+//         let mut username_file: File = File::open("hello.txt")?;
+//         let mut username: String = String::new();
+//         username_file.read_to_string(&mut username)?;
+//         Ok(username)
+//     }
+//     let y: Result<String, io::Error> = read_username_from_file();
+//     print!("{:?}",y)
+// }
+
+// use is_docker::is_docker;
+// fn two_sum(nums:& Vec<i32>, target: i32) -> Vec<i32> {
+//     let nums_length: usize = nums.len();
+//     let mut new_vec: Vec<i32> = Vec::new();
+
+//     for count in 0..nums_length {
+//         for i in (count + 1)..nums_length {
+//             if nums[count] + nums[i] == target {
+//                 new_vec.push(count as i32);
+//                 new_vec.push(i as i32);
+//                 return new_vec;
+//             }
+//         }
+//     }
+//     new_vec
+// }
+
+// fn main() {
+//     let nums: Vec<i32> = vec![1,1,1,1,1,1,1,1];
+//     let copy_nums: std::iter::Copied<std::slice::Iter<'_, i32>> =  nums.iter().copied();
+//     let result: Vec<i32> = two_sum(&nums, 6);
+
+//     let c: Option<i32> = copy_nums.reduce(|a: i32, b: i32| (a+b));
+//     println!("{:?}test",c);
+//     println!("{:?}", result);
+// }
+
+// struct MyIterator<'a> {
+//     input: &'a str,  // The struct holds a reference to a string slice with lifetime 'a
+//     index: usize,
+// }
+
+// impl<'a> MyIterator<'a> {
+//     // Constructor to create a new MyIterator
+//     fn new(input: &'a str) -> Self {
+//         MyIterator { input, index: 0 }
+//     }
+// }
+
+// impl<'a> Iterator for MyIterator<'a> {
+//     type Item = char;
+
+//     fn next(&mut self) -> Option<Self::Item> {
+//         if self.index < self.input.len() {
+//             let result: Option<char> = self.input[self.index..].chars().next();  // Get the next character
+//             self.index += result.as_ref().map(|c: &char| c.len_utf8()).unwrap_or(0); // Update index
+//             result
+//         } else {
+//             None  // End of iteration
+//         }
+//     }
+// }
+
+// fn main() {
+//     let my_str: &str = "Hello";
+//     let mut iter: MyIterator<'_> = MyIterator::new(my_str);  // Create a new iterator over a string slice
+
+//     while let Some(c) = iter.next() {
+//         println!("{}", c);  // Print each character one by one
+//     }
+// }
+
+// struct Greeter<'a> {
+//     name: &'a str,  // Greeter holds a reference to a string slice with lifetime 'a
+// }
+
+// impl<'a> Greeter<'a> {
+//     fn new(name: &'a str) -> Self {
+//         Greeter { name }
+//     }
+
+//     fn greet(&self) -> String {
+//         format!("Hello, {}!", self.name)
+//     }
+// }
+
+// fn main() {
+//     let name: String = String::from("Alice");  // A string owned by main function
+//     let greeter: Greeter<'_> = Greeter::new(&name);  // Passing a reference to 'name' with lifetime 'a
+
+//     println!("{}", greeter.greet());  // Prints "Hello, Alice!"
+// }
+
+// struct Important<'a> {
+//     part: &'a str,
+// }
+// impl<'a> Important<'a> {
+//     fn return_part(&'a self, announcement: &'a str) -> &'a str {
+//         print!("Attention {announcement}");
+//         self.part
+//     }
+// }
+// fn main() {
+//     // let string1: String = String::from("abcd");
+//     // let result: &str;
+//     // {
+//     //     let string2: String = String::from("xyz");
+//     //     result = longest(string1.as_str(), string2.as_str());
+//     // }
+//     // println!("{}", result)
+//     let novel: String = String::from("call me daddy. I am your sugar daddy");
+//     let first_sentence: &str = novel.split(".").next().expect("not found any sugar daddy");
+//     let i: Important<'_> = Important {
+//         part: first_sentence,
+//     };
+
+//     i.return_part("xxx".as_str());
+// }
+
+// // fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+// //     if x.len() > y.len() {
+// //         x
+// //     } else {
+// //         y
+// //     }
+// // }
+
+// use std::time::Instant;
+
+// fn my_async_function() -> i32 {
+//     for i in 1..1000000000 {
+//         // Reduced to a smaller range to avoid printing too many times
+//         println!("Doing something async... {}", i);
+//     }
+//     42
+// }
+
+// fn main() {
+//     // Start measuring time
+//     let start: Instant = Instant::now();
+
+//     // Run the async function synchronously using block_on
+//     // let result: i32 = block_on(my_async_function());
+//     let result: i32 = my_async_function();
+
+//     println!("Result: {}", result);
+
+//     // Calculate elapsed time
+//     let duration = start.elapsed();
+//     println!("Time taken: {:?}", duration);
+// }
+
+// #[derive(Clone, Copy)]
+// struct Point { x: i32, y: i32 }
+
+// fn main() {
+//     let c: char = 'Q';
+
+//     // A `ref` borrow on the left side of an assignment is equivalent to
+//     // an `&` borrow on the right side.
+//     let ref ref_c1 = c;
+//     let ref_c2: &char = &c;
+
+//     println!("ref_c1 equals ref_c2: {}", *ref_c1 == *ref_c2);
+
+//     let point: Point = Point { x: 0, y: 0 };
+
+//     // `ref` is also valid when destructuring a struct.
+//     let _copy_of_x: i32 = {
+//         // `ref_to_x` is a reference to the `x` field of `point`.
+//         let Point { x: ref ref_to_x, y: _ } = point;
+
+//         // Return a copy of the `x` field of `point`.
+//         *ref_to_x
+//     };
+
+//     // A mutable copy of `point`
+//     let mut mutable_point: Point = point;
+
+//     {
+//         // `ref` can be paired with `mut` to take mutable references.
+//         let Point { x: _, y: ref mut mut_ref_to_y } = mutable_point;
+
+//         // Mutate the `y` field of `mutable_point` via a mutable reference.
+//         *mut_ref_to_y = 1;
+//     }
+
+//     println!("point is ({}, {})", point.x, point.y);
+//     println!("mutable_point is ({}, {})", mutable_point.x, mutable_point.y);
+
+//     // A mutable tuple that includes a pointer
+//     let mut mutable_tuple: (Box<u32>, u32) = (Box::new(5u32), 3u32);
+
+//     {
+//         // Destructure `mutable_tuple` to change the value of `last`.
+//         let (_, ref mut last) = mutable_tuple;
+//         *last = 2u32;
+//     }
+
+//     println!("tuple is {:?}", mutable_tuple);
+// }
+
+// `elided_input` and `annotated_input` essentially have identical signatures
+// because the lifetime of `elided_input` is inferred by the compiler:
+// fn elided_input(x: &i32) {
+//     println!("`elided_input`: {}", x);
+// }
+
+// fn annotated_input<'a>(x: &'a i32) {
+//     println!("`annotated_input`: {}", x);
+// }
+
+// // Similarly, `elided_pass` and `annotated_pass` have identical signatures
+// // because the lifetime is added implicitly to `elided_pass`:
+// fn elided_pass(x: &i32) -> &i32 { x }
+
+// fn annotated_pass(x: &i32) -> &i32 { x }
+
+// fn main() {
+//     let x: i32 = 3;
+
+//     elided_input(&x);
+//     annotated_input(&x);
+
+//     println!("`elided_pass`: {}", elided_pass(&x));
+//     println!("`annotated_pass`: {}", annotated_pass(&x));
+// }
+
+// // One input reference with lifetime `'a` which must live
+// // at least as long as the function.
+// fn print_one<'a>(x: &'a i32) {
+//     println!("`print_one`: x is {}", x);
+// }
+
+// // Mutable references are possible with lifetimes as well.
+// fn add_one<'a>(x: &'a mut i32) {
+//     *x += 1;
+// }
+
+// Multiple elements with different lifetimes. In this case, it
+// would be fine for both to have the same lifetime `'a`, but
+// in more complex cases, different lifetimes may be required.
+// fn print_multi<'a, 'b>(x: &'a i32, y: &'b i32) {
+//     println!("`print_multi`: x is {}, y is {}", x, y);
+// }
+
+// Returning references that have been passed in is acceptable.
+// However, the correct lifetime must be returned.
+// fn pass_x<'a, 'b>(x: &'a i32, _: &'b i32) -> &'a i32 { x }
+
+//fn invalid_output<'a>() -> &'a String { &String::from("foo") }
+// The above is invalid: `'a` must live longer than the function.
+// Here, `&String::from("foo")` would create a `String`, followed by a
+// reference. Then the data is dropped upon exiting the scope, leaving
+// a reference to invalid data to be returned.
+
+// fn main() {
+//     let x = 7;
+//     let y = 9;
+
+//     print_one(&x);
+//     print_multi(&x, &y);
+
+//     let z = pass_x(&x, &y);
+//     print_one(z);
+
+//     let mut t = 3;
+//     add_one(&mut t);
+//     print_one(&t);
+// }
+
+// pub fn find_median_sorted_arrays(nums1: Vec<i32>, nums2: Vec<i32>) -> f64 {
+//     // Step 1: Merge the arrays into a new vector
+//     let mut merged: Vec<i32> = nums1;  // We move `nums1` into `merged`
+//     merged.extend(nums2);    // Add elements of `nums2` to the `merged` vector
+
+//     // Step 2: Sort the merged vector
+//     merged.sort();
+
+//     // Step 3: Calculate the median
+//     let len: usize = merged.len();
+
+//     // If the merged array has an odd number of elements, return the middle one
+//     if len % 2 == 1 {
+//         return merged[len / 2] as f64;
+//     }
+
+//     // If the merged array has an even number of elements, return the average of the two middle elements
+//     let mid1: f64 = merged[len / 2 - 1] as f64;
+//     let mid2: f64 = merged[len / 2] as f64;
+//     (mid1 + mid2) / 2.0
+// }
+
+// pub fn max_area(height: Vec<i32>) -> i32 {
+//     let mut sorted: Vec<i32> = height;
+//     sorted.sort();
+//     println!("{sorted:?}");
+//     11
+// }
+// fn main() {
+//     // let nums1: Vec<i32> = vec![1, 2];
+//     // let nums2: Vec<i32> = vec![3,4];
+//     // let _median:f64  = find_median_sorted_arrays(nums1, nums2);
+//     // println!("{}",_median)
+//     let height: Vec<i32> = vec![1, 8, 6, 2, 5, 4, 8, 3, 7];
+//     let area: i32 = max_area(height);
+//     println!("{}", area);
+// }
+
+fn main() {
+
 }
