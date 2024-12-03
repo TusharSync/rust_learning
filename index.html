@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>useState and useEffect Simulation</title>
+</head>
+<body>
+    <div id="state-display">State A: 0, State B: 0</div>
+    <button id="update-a">Update State A</button>
+    <button id="update-b">Update State B</button>
+
+    <script>
+        // Simulating useState
+        function useState(initialValue) {
+            let state = initialValue;
+
+            // Setter function that updates the state
+            function setState(newValue) {
+                if (newValue !== state) {
+                    state = newValue;
+                    triggerRender();  // Trigger render and effect check
+                }
+            }
+
+            // Getter function to get the current state value
+            function getState() {
+                return state;
+            }
+
+            return [getState, setState];  // Return both getter and setter
+        }
+
+        // Simulating useEffect
+        let lastDeps = [];
+        let effects = [];
+        function useEffect(effectFn, deps) {
+            const currentDeps = deps.map(dep => dep()); // Get current values of dependencies
+            
+            // Check if dependencies have changed
+            let hasChanged = false;
+            if (lastDeps.length !== currentDeps.length) {
+                hasChanged = true;
+            } else {
+                for (let i = 0; i < currentDeps.length; i++) {
+                    if (currentDeps[i] !== lastDeps[i]) {
+                        hasChanged = true;
+                        break;
+                    }
+                }
+            }
+
+            // Run the effect if dependencies have changed or it's the first run
+            if (hasChanged || lastDeps.length === 0) {
+                effectFn();  // Run the effect
+                lastDeps = currentDeps; // Update lastDeps with current deps
+            }
+        }
+
+        // Function to trigger re-render and check if effects should run
+        function triggerRender() {
+            render();
+            effects.forEach(effect => effect()); // Trigger any registered effects
+        }
+
+        // Function to update the UI with current state values
+        function render() {
+            const stateDisplay = document.getElementById('state-display');
+            stateDisplay.textContent = `State A: ${getStateA()} , State B: ${getStateB()}`;
+        }
+
+        // Using useState for state management
+        let [getStateA, setStateA] = useState(0);
+        let [getStateB, setStateB] = useState(0);
+
+        // Register useEffect with dependency on stateA and stateB
+        useEffect(() => {
+            console.log(`Effect triggered! State A: ${getStateA()}, State B: ${getStateB()}`);
+            // Simulate side effect (e.g., logging, API call, etc.)
+        }, [getStateA, getStateB]);  // Effect depends on getStateA and getStateB
+
+        // Store the effect in the effects list to run later
+        effects.push(() => useEffect(() => {
+            console.log(`Effect triggered! State A: ${getStateA()}, State B: ${getStateB()}`);
+        }, [getStateA, getStateB]));
+
+        // Add event listeners to buttons to update states
+        document.getElementById('update-a').addEventListener('click', () => {
+            setStateA(getStateA() + 1); // Increment State A
+        });
+
+        document.getElementById('update-b').addEventListener('click', () => {
+            setStateB(getStateB() + 1); // Increment State B
+        });
+
+        // Initial render
+        render();
+    </script>
+</body>
+</html>

@@ -6117,6 +6117,359 @@
 //     println!("{}", area);
 // }
 
-fn main() {
+// singletone
+// use once_cell::sync::Lazy;
+// use std::sync::Mutex;
 
-}
+// static SINGLETON: Lazy<Mutex<MyStruct>> = Lazy::new(|| Mutex::new(MyStruct::new()));
+
+// struct MyStruct {
+//     data: i32,
+// }
+
+// impl MyStruct {
+//     fn new() -> Self {
+//         MyStruct { data: 0 }
+//     }
+
+//     fn get_instance() -> std::sync::MutexGuard<'static, MyStruct> {
+//         SINGLETON.lock().unwrap()
+//     }
+// }
+
+// fn main() {
+//     let mut instance = MyStruct::get_instance();
+//     instance.data += 1;
+//     println!("Data: {}", instance.data);
+// }
+
+// Builder pattern
+// struct Config {
+//     field1: String,
+//     field2: i32,
+//     field3: bool,
+// }
+
+// struct ConfigBuilder {
+//     field1: Option<String>,
+//     field2: Option<i32>,
+//     field3: Option<bool>,
+// }
+
+// impl ConfigBuilder {
+//     fn new() -> Self {
+//         ConfigBuilder {
+//             field1: None,
+//             field2: None,
+//             field3: None,
+//         }
+//     }
+
+//     fn field1(mut self, value: &str) -> Self {
+//         self.field1 = Some(value.to_string());
+//         self
+//     }
+
+//     fn field2(mut self, value: i32) -> Self {
+//         self.field2 = Some(value);
+//         self
+//     }
+
+//     fn field3(mut self, value: bool) -> Self {
+//         self.field3 = Some(value);
+//         self
+//     }
+
+//     fn build(self) -> Config {
+//         Config {
+//             field1: self.field1.unwrap_or_else(|| "default".to_string()),
+//             field2: self.field2.unwrap_or(0),
+//             field3: self.field3.unwrap_or(false),
+//         }
+//     }
+// }
+
+// fn main() {
+//     let config: Config = ConfigBuilder::new()
+//         .field1("Custom")
+//         .field2(42)
+//         .build();
+//     println!("{:?}", config.field1);
+// }
+
+// trait Target {
+//     fn request(&self) -> String;
+// }
+
+// struct Adaptee;
+
+// impl Adaptee {
+//     fn specific_request(&self) -> String {
+//         "Specific Request".to_string()
+//     }
+// }
+
+// struct Adapter {
+//     adaptee: Adaptee,
+// }
+
+// impl Target for Adapter {
+//     fn request(&self) -> String {
+//         self.adaptee.specific_request()
+//     }
+// }
+
+// fn main() {
+//     let adaptee: Adaptee = Adaptee;
+//     let adapter: Adapter = Adapter { adaptee };
+//     println!("{}", adapter.request());
+// }
+
+// trait Component {
+//     fn operation(&self) -> String;
+// }
+
+// struct ConcreteComponent;
+
+// impl Component for ConcreteComponent {
+//     fn operation(&self) -> String {
+//         "ConcreteCompoxxxxxxxxxxxxxxxxxxxxxxnent".to_string()
+//     }
+// }
+
+// struct Decorator {
+//     component: Box<dyn Component>,
+// }
+
+// impl Component for Decorator {
+//     fn operation(&self) -> String {
+//         format!("Decorator({})", self.component.operation())
+//     }
+// }
+
+// fn main() {
+//     let component: ConcreteComponent = ConcreteComponent;
+//     let decorated: Decorator = Decorator {
+//         component: Box::new(component),
+//     };
+//     println!("{}", decorated.operation());
+// }
+
+// type Callback = Box<dyn Fn(String) + Send>;
+
+// struct Subject {
+//     observers: Vec<Callback>,
+// }
+
+// impl Subject {
+//     fn new() -> Self {
+//         Subject { observers: Vec::new() }
+//     }
+
+//     fn subscribe(&mut self, callback: Callback) {
+//         self.observers.push(callback);
+//     }
+
+//     fn notify(&self, message: String) {
+//         for observer in &self.observers {
+//             observer(message.clone());
+//         }
+//     }
+// }
+
+// fn main() {
+//     let mut subject: Subject = Subject::new();
+
+//     subject.subscribe(Box::new(|msg: String| println!("Observerxxx 1: {}", msg)));
+//     subject.subscribe(Box::new(|msg: String| println!("Observer yyyy 2: {}", msg)));
+
+//     subject.notify("Hello, Observers!".to_string());
+// }
+
+// trait State {
+//     fn handle(&self) -> Box<dyn State>;
+// }
+
+// struct StateA;
+
+// impl State for StateA {
+//     fn handle(&self) -> Box<dyn State> {
+//         println!("A to B");
+//         Box::new(StateB)
+//     }
+// }
+
+// struct StateB;
+
+// impl State for StateB {
+//     fn handle(&self) -> Box<dyn State> {
+//         println!("B to A.");
+//         Box::new(StateA)
+//     }
+// }
+
+// struct Context {
+//     state: Box<dyn State>,
+// }
+
+// impl Context {
+//     fn new() -> Self {
+//         Context {
+//             state: Box::new(StateA),
+//         }
+//     }
+
+//     fn request(&mut self) {
+//         self.state = self.state.handle();
+//     }
+// }
+
+// fn main() {
+//     let mut context: Context = Context::new();
+//     context.request();
+//     context.request();
+//     context.request();
+//     context.request();
+//     context.request();
+//     context.request();
+// }
+
+// use std::sync::{Mutex, Once};
+
+// // Singleton struct
+// struct AppConfig {
+//     feature_enabled: bool,
+//     max_connections: u32,
+// }
+
+// impl AppConfig {
+//     fn new() -> Self {
+//         AppConfig {
+//             feature_enabled: false,
+//             max_connections: 10,
+//         }
+//     }
+
+//     fn configure(&mut self, feature_enabled: bool, max_connections: u32) {
+//         self.feature_enabled = feature_enabled;
+//         self.max_connections = max_connections;
+//     }
+// }
+
+// // The global state
+// static mut CONFIG: Option<Mutex<AppConfig>> = None;
+// static INIT: Once = Once::new();
+
+// // Safe access method
+// fn get_config() -> &'static Mutex<AppConfig> {
+//     unsafe {
+//         INIT.call_once(|| {
+//             CONFIG = Some(Mutex::new(AppConfig::new()));
+//         });
+//         CONFIG.as_ref().expect("Config not initialized")
+//     }
+// }
+
+// fn main() {
+//     // Configure the Singleton
+//     {
+//         let mut config1: std::sync::MutexGuard<'_, AppConfig> = get_config().lock().unwrap();
+//         config1.configure(true, 100);
+//         println!(
+//             "Feature Enabled: {}, Max Connections: {}",
+//             config1.feature_enabled, config1.max_connections
+//         );
+//     }
+//     // Access and print the Singleton's state
+//     {
+//         let mut config1: std::sync::MutexGuard<'_, AppConfig> = get_config().lock().unwrap();
+//         config1.configure(false, 300);
+//     }
+// }
+
+// use std::sync::{Arc, Mutex};
+// use std::thread;
+
+// fn main() {
+//     let counter: Arc<Mutex<i32>> = Arc::new(Mutex::new(0)); // Use Arc to share ownership.
+//     let mut handles: Vec<thread::JoinHandle<()>> = vec![];
+
+//     for _ in 0..10 {
+//         let counter: Arc<Mutex<i32>> = Arc::clone(&counter);
+//         let handle: thread::JoinHandle<()> = thread::spawn(move || {
+//             let mut data: std::sync::MutexGuard<'_, i32> = counter.lock().unwrap();
+//             *data += 1;
+//         });
+//         handles.push(handle);
+//     }
+
+//     for handle in handles {
+//         handle.join().unwrap();
+//     }
+
+//     println!("Final counter value: {}", *counter.lock().unwrap());
+// }
+// pub trait Migration {
+//     fn execute(&self) -> &str;
+//     fn rollback(&self) -> &str;
+// }
+
+// pub struct CreateTable;
+// impl Migration for CreateTable {
+//     fn execute(&self) -> &str {
+//         "create table"
+//     }
+//     fn rollback(&self) -> &str {
+//         "drop table"
+//     }
+// }
+
+// pub struct AddField;
+// impl Migration for AddField {
+//     fn execute(&self) -> &str {
+//         "add field"
+//     }
+//     fn rollback(&self) -> &str {
+//         "remove field"
+//     }
+// }
+
+// struct Schema {
+//     commands: Vec<Box<dyn Migration>>,
+// }
+
+// impl Schema {
+//     fn new() -> Self {
+//         Self { commands: vec![] }
+//     }
+
+//     fn add_migration(&mut self, cmd: Box<dyn Migration>) {
+//         self.commands.push(cmd);
+//     }
+
+//     fn execute(&self) -> Vec<&str> {
+//         self.commands
+//             .iter()
+//             .map(|cmd: &Box<dyn Migration>| cmd.execute())
+//             .collect()
+//     }
+//     fn rollback(&self) -> Vec<&str> {
+//         self.commands
+//             .iter()
+//             .rev() // reverse iterator's direction
+//             .map(|cmd: &Box<dyn Migration>| cmd.rollback())
+//             .collect()
+//     }
+// }
+
+// fn main() {
+//     let mut schema: Schema = Schema::new();
+
+//     let cmd: Box<CreateTable> = Box::new(CreateTable);
+//     schema.add_migration(cmd);
+//     let cmd: Box<AddField> = Box::new(AddField);
+//     schema.add_migration(cmd);
+
+//     println!("{:?}", schema.execute());
+//     println!("{:?}", schema.rollback());
+// }
