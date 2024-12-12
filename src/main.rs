@@ -6473,3 +6473,18 @@
 //     println!("{:?}", schema.execute());
 //     println!("{:?}", schema.rollback());
 // }
+
+
+use logging_aspect::log_execution;
+
+#[log_execution]
+fn example_function(x: i32, y: i32) -> i32 {
+    let result: i32 = x + y;
+    println!("Result: {}", result);
+
+    result
+}
+
+fn main() {
+    let _result: i32 = example_function(5, 3);
+}

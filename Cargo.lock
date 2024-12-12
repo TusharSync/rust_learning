@@ -13,10 +13,8 @@ name = "first_project"
 version = "0.1.0"
 dependencies = [
  "futures",
- "proc-macro2",
- "quote",
+ "logging_aspect",
  "rpassword",
- "syn",
 ]
 
 [[package]]
@@ -113,6 +111,15 @@ name = "libc"
 version = "0.2.161"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8e9489c2807c139ffd9c1794f4af0ebe86a828db53ecdc7fea2111d0fed085d1"
+
+[[package]]
+name = "logging_aspect"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "memchr"
