@@ -6475,16 +6475,63 @@
 // }
 
 
-use logging_aspect::log_execution;
+// use logging_aspect::log_execution;
 
-#[log_execution]
-fn example_function(x: i32, y: i32) -> i32 {
-    let result: i32 = x + y;
-    println!("Result: {}", result);
+// #[log_execution]
+// fn example_function(x: i32, y: i32) -> i32 {
+//     let result: i32 = x + y;
+//     println!("Result: {}", result);
 
-    result
+//     result
+// }
+
+// fn main() {
+//     let _result: i32 = example_function(5, 3);
+// }
+
+
+
+
+
+
+// macro_rules! log {
+//     (gand_fad_di|-| $msg:expr) => {
+//         println!("[INFO]: {}", $msg);
+//     };
+//     (baccha_hoga|-| $msg:expr) => {
+//         println!("[WARN]: {}", $msg);
+//     };
+//     (chodo|-| $msg:expr) => {
+//         eprintln!("[ERROR]: {}", $msg);
+//     };
+// }
+
+// fn main() {
+//     log!(gand_fad_di|-| "Application started");
+//     log!(baccha_hoga|-| "Low disk space");
+//     log!(chodo|-| "Failed to connect to database");
+//     log!(gand_fad_di|-|"ssdd");
+
+// }
+
+
+use struct_display_macro::AutoDisplay;
+
+// #[derive(AutoDisplay)]
+#[derive(Debug)]
+struct ImplExample2 {
+    t: i32,
+    other_field: String,
+    additional_field: f64,
+    x:String
 }
 
 fn main() {
-    let _result: i32 = example_function(5, 3);
+    let x: ImplExample2 = ImplExample2 {
+        t: 10,
+        other_field: String::from("example"),
+        additional_field: 42.5,
+        x:"test".to_string()
+    };
+    println!("{:?}",x);
 }

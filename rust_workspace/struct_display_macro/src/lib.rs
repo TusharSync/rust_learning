@@ -7,7 +7,7 @@ use syn::{parse_macro_input, DeriveInput, Data, Fields};
 pub fn auto_display_derive(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
     let name = input.ident;
-    let expanded = match input.data {
+    let expanded: proc_macro2::TokenStream = match input.data {
         Data::Struct(data_struct) => {
             match data_struct.fields {
                 Fields::Named(fields_named) => {

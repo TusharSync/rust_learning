@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASM Sum Example</title>
+    <script>
+       const wasmModule = fetch('sumCounts.wasm')
+            .then(response => response.arrayBuffer())
+            .then(bytes => WebAssembly.instantiate(bytes))
+            .then(result => {
+                console.log(result.instance.exports?.add,"lllllll");
+                
+                // Exported add function is accessible now
+                window.add = result.instance.exports.add;
+            });
+            const array1 = [{ count: 9 }, { count: 15 }, { count: 10 }, { count: 100 }];
+            const result = window.sumCounts(array1);
+            alert('Result from WebAssembly: ' + result);
+    </script>
+</head>
+<body>
+    <h1>Sum of Counts in WASM</h1>
+    <p id="result">Loading...</p>
+</body>
+</html>

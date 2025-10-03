@@ -7,3 +7,4 @@ edition = "2021"
 rpassword = "7.0.0"
 futures = "0.3"
 logging_aspect = { path = "./logging_aspect" }
+struct_display_macro = { path = "./rust_workspace/struct_display_macro" }
